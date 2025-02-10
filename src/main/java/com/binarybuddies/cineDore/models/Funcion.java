@@ -16,7 +16,7 @@ public class Funcion
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_pelicula", nullable = false)
+    @JoinColumn(name = "id_pelicula", referencedColumnName = "id", nullable = false)
     private Pelicula idPelicula;
 
     @Column(name = "fecha_hora", nullable = false)
@@ -25,7 +25,7 @@ public class Funcion
     private LocalDateTime fechaHora;
 
     @ManyToOne
-    @JoinColumn(name = "id_sala", nullable = false)
+    @JoinColumn(name = "id_sala", referencedColumnName = "id", nullable = false)
     private Sala idSala;
 
     @OneToMany(mappedBy = "funcion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -20,7 +20,7 @@ public class Cuenta
     private String estadoCuenta;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario", nullable = false, unique = true)
+    @JoinColumn(name = "id_usuario",referencedColumnName = "id", nullable = false, unique = true)
     private String idUsuario;
 
     @OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

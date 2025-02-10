@@ -8,11 +8,11 @@ import jakarta.validation.constraints.Min;
 public class DetalleTicket
 {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_ticket_entrada", nullable = false)
+    @JoinColumn(name = "id_ticket_entrada", referencedColumnName = "id", nullable = false)
     private TicketEntrada idTicketEntrada;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_tipo_entrada", nullable = false)
+    @JoinColumn(name = "id_tipo_entrada", referencedColumnName = "id", nullable = false)
     private TipoEntrada tipoEntrada;
 
     @Column(name = "cantidad", nullable = false)

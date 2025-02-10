@@ -19,6 +19,6 @@ public class Sala
     private Set<Funcion> funciones;
 
     @ManyToOne
-    @JoinColumn(name = "id_cine", nullable = false)
+    @JoinColumn(name = "id_cine", referencedColumnName = "id", nullable = false)
     private Cine cine;
 }

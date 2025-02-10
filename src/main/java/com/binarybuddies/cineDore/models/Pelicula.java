@@ -32,15 +32,15 @@ public class Pelicula
     private Categoria categoria;
 
     @ManyToOne
-    @JoinColumn(name = "idClasificacion", nullable = false)
+    @JoinColumn(name = "idClasificacion", referencedColumnName = "id", nullable = false)
     private Clasificacion clasificacion;
 
     @ManyToOne
-    @JoinColumn(name = "idFormato", nullable = false)
+    @JoinColumn(name = "idFormato", referencedColumnName = "id", nullable = false)
     private Formato formato;
 
     @ManyToOne
-    @JoinColumn(name = "idLenguaje", nullable = false)
+    @JoinColumn(name = "idLenguaje", referencedColumnName = "id", nullable = false)
     private Lenguaje lenguaje;
 
     @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

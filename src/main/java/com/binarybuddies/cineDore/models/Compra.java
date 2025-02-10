@@ -18,12 +18,12 @@ public class Compra
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario", nullable = false)
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id", nullable = false)
     @NotNull(message = "Usuario cannot be null")
     private Usuario idUsuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_funcion", nullable = false)
+    @JoinColumn(name = "id_funcion", referencedColumnName = "id", nullable = false)
     @NotNull(message = "Función cannot be null")
     private Funcion funcion;
 
