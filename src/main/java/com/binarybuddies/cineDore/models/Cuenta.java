@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "cuenta")
+@Table(name = "cuentas")
 public class Cuenta
 {
     @Id
@@ -14,7 +14,6 @@ public class Cuenta
     private Long id;
 
     private String descripcion;
-
 
     @Column(name = "estado_cuenta", nullable = false)
     private String estadoCuenta;

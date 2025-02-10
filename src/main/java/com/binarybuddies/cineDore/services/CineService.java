@@ -1,5 +1,6 @@
 package com.binarybuddies.cineDore.services;
 
+import com.binarybuddies.cineDore.models.Cine;
 import com.binarybuddies.cineDore.repositories.CineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,7 @@ package com.binarybuddies.cineDore.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "sesion")
+@Table(name = "sesiones")
 public class Sesion
 {
     @Id
@@ -14,6 +14,6 @@ public class Sesion
     private String descripcion;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cuenta", nullable = false)
+    @JoinColumn(name = "id_cuenta", referencedColumnName = "id", nullable = false)
     private Cuenta idCuenta;
 }
