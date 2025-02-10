@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "funcion")
+@Table(name = "funciones")
 public class Funcion
 {
     @Id
@@ -20,7 +20,7 @@ public class Funcion
     private Pelicula idPelicula;
 
     @Column(name = "fecha_hora", nullable = false)
-    @NotNull(message = "Fecha y hora cannot be null")
+    @NotNull(message = "Fecha y hora no pueden estar vacias")
     @Future(message = "La fecha de la función debe ser futura")
     private LocalDateTime fechaHora;
 

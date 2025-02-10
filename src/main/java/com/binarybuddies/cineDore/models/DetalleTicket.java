@@ -4,9 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 
 @Entity
-@Table(name = "detalle_ticket")
-public class DetalleTicket
-{
+@Table(name = "detalle_tickets")
+public class DetalleTicket {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_ticket_entrada", referencedColumnName = "id", nullable = false)
     private TicketEntrada idTicketEntrada;

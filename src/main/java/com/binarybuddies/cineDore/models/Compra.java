@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "compra")
+@Table(name = "compras")
 public class Compra
 {
     @Id
@@ -31,7 +31,7 @@ public class Compra
     private LocalDateTime fechaCompra;
 
     @Column(name = "total_pago", nullable = false, precision = 10, scale = 2)
-    @Positive(message = "Total pago must be positive")
+    @Positive(message = "Total debe ser positivo")
     private BigDecimal totalPago;
 
     @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL)

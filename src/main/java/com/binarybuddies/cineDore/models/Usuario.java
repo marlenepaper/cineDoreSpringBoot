@@ -9,29 +9,28 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "usuario")
-public class Usuario
-{
+@Table(name = "usuarios")
+public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "nombre", nullable = false)
-    private String firstName;
+    private String nombre;
 
     @Column(name = "apellidos", nullable = false)
-    private String lastName;
+    private String apellidos;
 
     @Column(name = "correo_electronico", unique = true, nullable = false)
     @Email(message = "Email should be valid")
     private String correoElectronico;
 
     @Column(name = "contraseña", nullable = false)
-    @NotNull(message = "Contraseña cannot be null")
+    @NotNull(message = "Contraseña no puede estar vacía")
     private String contrasenia;
 
     @Column(name = "telefono")
-    @Pattern(regexp = "^[0-9]*$", message = "Phone number should contain only numbers")
+    @Pattern(regexp = "^[0-9]*$", message = "El numero telefonico unicamente puede contenter numeros")
     private String telefono;
 
     @Column(unique = true, nullable = false)
