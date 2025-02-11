@@ -1,9 +1,11 @@
 package com.binarybuddies.cineDore.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "salas")
 public class Sala
@@ -13,7 +15,8 @@ public class Sala
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String numeroSala;
+    @Enumerated(EnumType.STRING)
+    private Salas numeroSala;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Funcion> funciones;

@@ -2,7 +2,9 @@ package com.binarybuddies.cineDore.models;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "sesiones")
 public class Sesion

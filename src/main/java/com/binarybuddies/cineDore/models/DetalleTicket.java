@@ -2,7 +2,9 @@ package com.binarybuddies.cineDore.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "detalle_tickets")
 public class DetalleTicket {

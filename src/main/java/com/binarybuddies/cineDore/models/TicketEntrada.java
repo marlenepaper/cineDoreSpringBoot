@@ -1,10 +1,12 @@
 package com.binarybuddies.cineDore.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "tickets_entrada")
 public class TicketEntrada
@@ -14,7 +16,7 @@ public class TicketEntrada
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_compra", nullable = false)
+    @JoinColumn(name = "id_compra", referencedColumnName = "id", nullable = false)
     private Compra compra;
 
     @Column(name = "codigo_qr")

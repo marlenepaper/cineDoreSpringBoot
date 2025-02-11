@@ -2,10 +2,12 @@ package com.binarybuddies.cineDore.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "tipo_entradas")
 public class TipoEntrada

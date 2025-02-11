@@ -1,9 +1,11 @@
 package com.binarybuddies.cineDore.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "formatos")
 public class Formato
