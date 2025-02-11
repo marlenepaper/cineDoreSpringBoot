@@ -16,7 +16,7 @@ public class Sala
 
     @Column(nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
-    private Salas numeroSala;
+    private Salas salas;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Funcion> funciones;

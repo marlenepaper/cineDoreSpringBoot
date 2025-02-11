@@ -22,7 +22,7 @@ public class Compra
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id", nullable = false)
     @NotNull(message = "Usuario cannot be null")
-    private Usuario idUsuario;
+    private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_funcion", referencedColumnName = "id", nullable = false)

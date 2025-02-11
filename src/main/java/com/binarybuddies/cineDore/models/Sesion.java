@@ -17,5 +17,5 @@ public class Sesion
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cuenta", referencedColumnName = "id", nullable = false)
-    private Cuenta idCuenta;
+    private Cuenta cuenta;
 }

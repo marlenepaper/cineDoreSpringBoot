@@ -8,9 +8,14 @@ import lombok.Data;
 @Entity
 @Table(name = "detalle_tickets")
 public class DetalleTicket {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; // Agregar un campo de identificación obligatorio
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_ticket_entrada", referencedColumnName = "id", nullable = false)
-    private TicketEntrada idTicketEntrada;
+    private TicketEntrada ticketEntrada;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_entrada", referencedColumnName = "id", nullable = false)

@@ -19,7 +19,7 @@ public class Funcion
 
     @ManyToOne
     @JoinColumn(name = "id_pelicula", referencedColumnName = "id", nullable = false)
-    private Pelicula idPelicula;
+    private Pelicula pelicula;
 
     @Column(name = "fecha_hora", nullable = false)
     @NotNull(message = "Fecha y hora no pueden estar vacias")
@@ -28,7 +28,7 @@ public class Funcion
 
     @ManyToOne
     @JoinColumn(name = "id_sala", referencedColumnName = "id", nullable = false)
-    private Sala idSala;
+    private Sala sala;
 
     @OneToMany(mappedBy = "funcion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Compra> compras;

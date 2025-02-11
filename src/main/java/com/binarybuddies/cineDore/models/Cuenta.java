@@ -22,7 +22,7 @@ public class Cuenta
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario",referencedColumnName = "id", nullable = false, unique = true)
-    private String idUsuario;
+    private Usuario usuario;
 
     @OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Sesion> sesiones;
