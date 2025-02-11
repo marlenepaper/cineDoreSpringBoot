@@ -7,18 +7,16 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "formatos")
-public class Formato
-{
+@Table(name = "colores")
+public class Color {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String nombre;
+    private String color;
 
-    private String detalle;
-
-    @OneToMany(mappedBy = "formato", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Pelicula> peliculas;
 }

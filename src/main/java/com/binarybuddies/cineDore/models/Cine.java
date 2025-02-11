@@ -29,8 +29,8 @@ public class Cine
     @Column(nullable = false)
     private String instalaciones;
 
-    @Column(nullable = false)
-    private String fechasDeCierre;
+//    @Column(nullable = false)
+//    private String fechasDeCierre;
 
     @OneToMany(mappedBy = "cine", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Sala> salas;

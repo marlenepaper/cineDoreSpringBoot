@@ -45,6 +45,10 @@ public class Pelicula
     @JoinColumn(name = "idLenguaje", referencedColumnName = "id", nullable = false)
     private Lenguaje lenguaje;
 
+    @ManyToOne
+    @JoinColumn(name = "idColor", referencedColumnName = "id", nullable = false)
+    private Color color;
+
     @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Funcion> funciones;
 }

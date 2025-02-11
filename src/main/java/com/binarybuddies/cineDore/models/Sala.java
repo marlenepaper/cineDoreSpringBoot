@@ -15,7 +15,7 @@ public class Sala
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String salas;
+    private String nombre;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Funcion> funciones;
