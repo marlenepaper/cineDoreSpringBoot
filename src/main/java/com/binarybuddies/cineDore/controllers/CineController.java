@@ -20,6 +20,6 @@ public class CineController {
 
     @GetMapping
     public List<Cine> getAllCines() {
-        return cineService.getAllCines();
+        return cineService.getAll();
     }
 }

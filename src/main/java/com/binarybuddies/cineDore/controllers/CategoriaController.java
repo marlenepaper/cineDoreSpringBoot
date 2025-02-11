@@ -20,6 +20,6 @@ public class CategoriaController {
 
     @GetMapping
     public List<Categoria> getAllCategorias() {
-        return categoriaService.getAllCategorias();
+        return categoriaService.getAll();
     }
 }

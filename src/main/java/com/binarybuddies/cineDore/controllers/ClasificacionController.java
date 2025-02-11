@@ -20,6 +20,6 @@ public class ClasificacionController {
 
     @GetMapping
     public List<Clasificacion> getAllClasificaciones() {
-        return clasificacionService.getAllClasificaciones();
+        return clasificacionService.getAll();
     }
 }
