@@ -10,7 +10,7 @@ public class CuentaService {
     @Autowired
     private CuentaRepository cuentaRepository;
 
-    public List<Cuenta> getAllCuentas() {
+    public List<Cuenta> getAll() {
         return cuentaRepository.findAll();
     }
 }

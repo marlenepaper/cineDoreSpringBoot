@@ -10,7 +10,7 @@ public class SesionService {
     @Autowired
     private SesionRepository sesionRepository;
 
-    public List<Sesion> getAllSesiones() {
+    public List<Sesion> getAll() {
         return sesionRepository.findAll();
     }
 }
