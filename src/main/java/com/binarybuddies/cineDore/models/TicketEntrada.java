@@ -22,8 +22,8 @@ public class TicketEntrada
     @Column(name = "codigo_qr")
     private String codigoQr;
 
-    @Column(name = "estado", nullable = false)
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "estado_ticket_id", nullable = false)
     private EstadoTicket estado;
 
     @OneToMany(mappedBy = "ticketEntrada", cascade = CascadeType.ALL)

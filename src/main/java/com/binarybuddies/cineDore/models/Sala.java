@@ -15,8 +15,7 @@ public class Sala
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @Enumerated(EnumType.STRING)
-    private Salas salas;
+    private String salas;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Funcion> funciones;

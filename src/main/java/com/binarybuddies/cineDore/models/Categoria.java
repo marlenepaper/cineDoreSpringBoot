@@ -14,20 +14,9 @@ public class Categoria {
     private Long id;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private CategoriaPelicula categoria;
+    private String categoria;
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Pelicula> peliculas;
 
-    public Categoria() {}
-
-    public Categoria(CategoriaPelicula categoria) {
-        this.categoria = categoria;
-    }
-
-    // Método útil para obtener el nombre para mostrar
-    public String getNombreCategoria() {
-        return categoria.getDisplayName();
-    }
 }

@@ -15,8 +15,10 @@ public class Lenguaje
     private Long id;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Lenguajes nombre;
+    private String nombre;
+
+    @Column(nullable = false)
+    private String descripcion;
 
     @OneToMany(mappedBy = "lenguaje", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Pelicula> peliculas;

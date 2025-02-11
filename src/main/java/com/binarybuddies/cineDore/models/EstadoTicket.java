@@ -1,16 +1,20 @@
 package com.binarybuddies.cineDore.models;
 
-public enum EstadoTicket
-{
-    Activo,
-    Inactivo
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Data
+@Entity
+@Table (name="estados_ticket")
+public class EstadoTicket {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String nombre;
+
 }
 
 
-/*
-*
-* {
-* PENDIENTE: PENDIENTE
-* }
-*
-* */
