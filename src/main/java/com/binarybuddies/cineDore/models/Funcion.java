@@ -1,11 +1,14 @@
 package com.binarybuddies.cineDore.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -19,6 +22,7 @@ public class Funcion
 
     @ManyToOne
     @JoinColumn(name = "id_pelicula", referencedColumnName = "id", nullable = false)
+    @JsonManagedReference
     private Pelicula pelicula;
 
     @Column(name = "fecha_hora", nullable = false)
@@ -28,8 +32,10 @@ public class Funcion
 
     @ManyToOne
     @JoinColumn(name = "id_sala", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private Sala sala;
 
     @OneToMany(mappedBy = "funcion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Compra> compras;
+    @JsonManagedReference
+    private List<Compra> compras= new ArrayList<>();
 }

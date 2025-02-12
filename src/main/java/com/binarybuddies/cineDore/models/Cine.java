@@ -1,8 +1,12 @@
 package com.binarybuddies.cineDore.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -33,6 +37,7 @@ public class Cine
 //    private String fechasDeCierre;
 
     @OneToMany(mappedBy = "cine", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Sala> salas;
+    @JsonManagedReference
+    private List<Sala> salas= new ArrayList<>();
 
 }

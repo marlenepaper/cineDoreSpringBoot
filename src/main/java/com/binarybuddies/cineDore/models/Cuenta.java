@@ -4,6 +4,7 @@ package com.binarybuddies.cineDore.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -25,5 +26,5 @@ public class Cuenta
     private Usuario usuario;
 
     @OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Sesion> sesiones;
+    private List<Sesion> sesiones= new ArrayList<>();
 }

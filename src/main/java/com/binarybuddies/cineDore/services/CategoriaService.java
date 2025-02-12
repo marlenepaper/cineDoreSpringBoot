@@ -2,6 +2,7 @@ package com.binarybuddies.cineDore.services;
 
 import com.binarybuddies.cineDore.models.Categoria;
 import com.binarybuddies.cineDore.repositories.CategoriaRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ public class CategoriaService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
+    @Transactional
     public List<Categoria> getAll() {
         return categoriaRepository.findAll();
     }

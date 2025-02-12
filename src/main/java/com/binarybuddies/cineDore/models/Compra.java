@@ -1,5 +1,6 @@
 package com.binarybuddies.cineDore.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -27,6 +28,7 @@ public class Compra
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_funcion", referencedColumnName = "id", nullable = false)
     @NotNull(message = "Función cannot be null")
+    @JsonBackReference
     private Funcion funcion;
 
     @Column(name = "fecha_compra", nullable = false)

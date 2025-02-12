@@ -3,6 +3,7 @@ package com.binarybuddies.cineDore.controllers;
 import com.binarybuddies.cineDore.models.Lenguaje;
 import com.binarybuddies.cineDore.services.LenguajeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/lenguajes")
+@RequestMapping("/lenguajes")
 @CrossOrigin(origins = "*")
 public class LenguajeController {
 
@@ -19,7 +20,8 @@ public class LenguajeController {
     private LenguajeService lenguajeService;
 
     @GetMapping
-    public List<Lenguaje> getAllLenguajes() {
-        return lenguajeService.getAll();
+    public ResponseEntity<List<Lenguaje>> getAllLenguajes() {
+        List<Lenguaje> lenguajes = lenguajeService.getAll();
+        return ResponseEntity.ok(lenguajes);
     }
 }
