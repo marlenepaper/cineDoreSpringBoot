@@ -1,6 +1,7 @@
 package com.binarybuddies.cineDore.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -23,6 +24,7 @@ public class Compra
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id", nullable = false)
     @NotNull(message = "Usuario cannot be null")
+    @JsonBackReference
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,6 +41,7 @@ public class Compra
     private BigDecimal totalPago;
 
     @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<TicketEntrada> tickets = new ArrayList<>();
 
     @PrePersist

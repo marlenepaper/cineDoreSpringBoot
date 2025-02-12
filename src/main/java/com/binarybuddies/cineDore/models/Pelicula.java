@@ -39,27 +39,27 @@ public class Pelicula
 
     @ManyToOne
     @JoinColumn(name = "idCategoria", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Categoria categoria;
 
     @ManyToOne
     @JoinColumn(name = "idClasificacion", referencedColumnName = "id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Clasificacion clasificacion;
 
     @ManyToOne
     @JoinColumn(name = "idFormato", referencedColumnName = "id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Formato formato;
 
     @ManyToOne
     @JoinColumn(name = "idLenguaje", referencedColumnName = "id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Lenguaje lenguaje;
 
     @ManyToOne
     @JoinColumn(name = "idColor", referencedColumnName = "id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Color color;
 
     @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

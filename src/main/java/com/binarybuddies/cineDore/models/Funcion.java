@@ -22,7 +22,7 @@ public class Funcion
 
     @ManyToOne
     @JoinColumn(name = "id_pelicula", referencedColumnName = "id", nullable = false)
-    @JsonManagedReference
+    @JsonBackReference
     private Pelicula pelicula;
 
     @Column(name = "fecha_hora", nullable = false)

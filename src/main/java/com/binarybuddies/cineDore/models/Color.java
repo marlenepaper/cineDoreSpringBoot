@@ -24,4 +24,5 @@ public class Color {
     @OneToMany(mappedBy = "color", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Pelicula> peliculas= new ArrayList<>();
+
 }

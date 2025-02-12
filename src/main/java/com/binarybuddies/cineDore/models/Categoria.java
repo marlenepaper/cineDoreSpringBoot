@@ -1,6 +1,8 @@
 package com.binarybuddies.cineDore.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,6 +14,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "categorias")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
