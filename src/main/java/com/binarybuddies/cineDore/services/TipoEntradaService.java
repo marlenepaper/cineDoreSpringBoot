@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -16,5 +18,8 @@ public class TipoEntradaService {
     @Transactional
     public List<TipoEntrada> getAll() {
         return tipoEntradaRepository.findAll();
+    }
+    public Optional<TipoEntrada> getTipoEntradaById(long id) {
+        return Optional.of(this.tipoEntradaRepository.getById(id));
     }
 }

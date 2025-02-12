@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClasificacionService {
@@ -15,5 +16,9 @@ public class ClasificacionService {
     @Transactional
     public List<Clasificacion> getAll() {
         return clasificacionRepository.findAll();
+    }
+
+    public Optional<Clasificacion> getClasificacionById(long id) {
+        return Optional.of(this.clasificacionRepository.getById(id));
     }
 }

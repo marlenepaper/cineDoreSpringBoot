@@ -1,5 +1,6 @@
 package com.binarybuddies.cineDore.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "detalle_tickets")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DetalleTicket {
 
     @Id

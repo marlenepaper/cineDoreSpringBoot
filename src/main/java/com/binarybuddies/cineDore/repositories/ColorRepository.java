@@ -1,11 +1,13 @@
 package com.binarybuddies.cineDore.repositories;
 
-import com.binarybuddies.cineDore.models.Compra;
+import com.binarybuddies.cineDore.models.Color;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import java.util.Optional;
-@Repository
-public interface CompraRepository extends JpaRepository<Compra, Long> {
 
-    Optional<Compra> getReferenceById(long id);
+import java.util.Optional;
+
+@Repository
+public interface ColorRepository extends JpaRepository<Color, Long> {
+
+    Optional<Color> getReferenceById(long id);
 }

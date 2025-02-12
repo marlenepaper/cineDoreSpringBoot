@@ -1,15 +1,14 @@
 package com.binarybuddies.cineDore.controllers;
 
 import com.binarybuddies.cineDore.models.Categoria;
+import com.binarybuddies.cineDore.models.Pelicula;
 import com.binarybuddies.cineDore.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/categorias")
@@ -23,5 +22,10 @@ public class CategoriaController {
     public ResponseEntity<List<Categoria>> getAllCategorias() {
         List<Categoria> categorias=categoriaService.getAll();
         return ResponseEntity.ok(categorias);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Categoria>> getById(@PathVariable long id) {
+        return ResponseEntity.ok(this.categoriaService.getCategoriaById(id));
     }
 }

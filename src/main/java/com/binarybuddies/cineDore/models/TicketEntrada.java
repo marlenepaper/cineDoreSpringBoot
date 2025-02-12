@@ -1,5 +1,6 @@
 package com.binarybuddies.cineDore.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "tickets_entrada")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TicketEntrada
 {
     @Id

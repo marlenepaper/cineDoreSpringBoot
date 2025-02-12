@@ -1,5 +1,6 @@
 package com.binarybuddies.cineDore.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "colores")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Color {
 
     @Id

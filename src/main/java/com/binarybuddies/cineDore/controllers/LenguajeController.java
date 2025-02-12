@@ -4,11 +4,9 @@ import com.binarybuddies.cineDore.models.Lenguaje;
 import com.binarybuddies.cineDore.services.LenguajeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.List;
 
 @RestController
@@ -23,5 +21,10 @@ public class LenguajeController {
     public ResponseEntity<List<Lenguaje>> getAllLenguajes() {
         List<Lenguaje> lenguajes = lenguajeService.getAll();
         return ResponseEntity.ok(lenguajes);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Lenguaje>> getById(@PathVariable long id) {
+        return ResponseEntity.ok(this.lenguajeService.getLenguajeById(id));
     }
 }

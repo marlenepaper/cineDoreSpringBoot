@@ -1,6 +1,7 @@
 package com.binarybuddies.cineDore.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
@@ -14,6 +15,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "funciones")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Funcion
 {
     @Id

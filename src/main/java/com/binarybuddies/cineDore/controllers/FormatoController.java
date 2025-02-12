@@ -4,11 +4,9 @@ import com.binarybuddies.cineDore.models.Formato;
 import com.binarybuddies.cineDore.services.FormatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.List;
 
 @RestController
@@ -23,5 +21,10 @@ public class FormatoController {
     public ResponseEntity<List<Formato>> getAllFormatos() {
         List<Formato> formatos = formatoService.getAll();
         return ResponseEntity.ok(formatos);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Formato>> getById(@PathVariable long id) {
+        return ResponseEntity.ok(this.formatoService.getFormatoById(id));
     }
 }
