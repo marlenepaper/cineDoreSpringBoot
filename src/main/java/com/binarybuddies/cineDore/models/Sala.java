@@ -25,7 +25,7 @@ public class Sala
     private String nombre;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonBackReference
     private List<Funcion> funciones= new ArrayList<>();
 
     @ManyToOne

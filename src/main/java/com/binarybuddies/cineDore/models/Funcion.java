@@ -34,10 +34,10 @@ public class Funcion
 
     @ManyToOne
     @JoinColumn(name = "id_sala", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
+    @JsonManagedReference
     private Sala sala;
 
     @OneToMany(mappedBy = "funcion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonBackReference
     private List<Compra> compras= new ArrayList<>();
 }

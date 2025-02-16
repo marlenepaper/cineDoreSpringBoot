@@ -1,16 +1,13 @@
 package com.binarybuddies.cineDore.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -32,34 +29,34 @@ public class Pelicula
     private int duracion; // in minutes
 
     @Column(nullable = false)
-    private String sipnosis;
+    private String sinopsis;
 
     @Column(nullable = false)
     private String imagenPoster;
 
     @ManyToOne
     @JoinColumn(name = "idCategoria", nullable = false)
-    @JsonBackReference
+    @JsonManagedReference
     private Categoria categoria;
 
     @ManyToOne
     @JoinColumn(name = "idClasificacion", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
+    @JsonManagedReference
     private Clasificacion clasificacion;
 
     @ManyToOne
     @JoinColumn(name = "idFormato", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
+    @JsonManagedReference
     private Formato formato;
 
     @ManyToOne
     @JoinColumn(name = "idLenguaje", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
+    @JsonManagedReference
     private Lenguaje lenguaje;
 
     @ManyToOne
     @JoinColumn(name = "idColor", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
+    @JsonManagedReference
     private Color color;
 
     @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

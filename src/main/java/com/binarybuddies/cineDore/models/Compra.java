@@ -32,7 +32,7 @@ public class Compra
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_funcion", referencedColumnName = "id", nullable = false)
     @NotNull(message = "Función cannot be null")
-    @JsonBackReference
+    @JsonManagedReference
     private Funcion funcion;
 
     @Column(name = "fecha_compra", nullable = false)
