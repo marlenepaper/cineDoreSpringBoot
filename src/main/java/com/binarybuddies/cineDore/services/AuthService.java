@@ -1,8 +1,10 @@
 package com.binarybuddies.cineDore.services;
 
+import com.binarybuddies.cineDore.config.ResourceNotFoundException;
 import com.binarybuddies.cineDore.dto.AuthResponseDTO;
 import com.binarybuddies.cineDore.dto.LoginRequestDTO;
 import com.binarybuddies.cineDore.dto.RegisterRequestDTO;
+import com.binarybuddies.cineDore.dto.UserProfileDTO;
 import com.binarybuddies.cineDore.models.Usuario;
 import com.binarybuddies.cineDore.repositories.UsuarioRepository;
 import com.binarybuddies.cineDore.security.JwtUtil;
@@ -52,4 +54,25 @@ public class AuthService {
         String token = jwtUtil.generateToken(usuario.getCorreoElectronico());
         return new AuthResponseDTO(token, usuario);
     }
+
+    public UserProfileDTO getUserProfile(String email) {
+        Usuario usuario = usuarioRepository.findByCorreoElectronico(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        UserProfileDTO dto = new UserProfileDTO();
+        dto.setNombre(usuario.getNombre());
+        dto.setApellidos(usuario.getApellidos());
+        dto.setCorreoElectronico(usuario.getCorreoElectronico());
+        dto.setTelefono(usuario.getTelefono());
+
+        return dto;
+    }
+
+
+    public void deleteAccount(String email) {
+        Usuario usuario = usuarioRepository.findByCorreoElectronico(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        usuarioRepository.delete(usuario);
+    }
+
 }
