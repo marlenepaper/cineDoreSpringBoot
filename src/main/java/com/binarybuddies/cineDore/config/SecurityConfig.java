@@ -38,6 +38,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/peliculas/**").permitAll()
+                        .requestMatchers("/clasificaciones/**").permitAll()
+                        .requestMatchers("/lenguajes/**").permitAll()
+                        .requestMatchers("/formatos/**").permitAll()
+                        .requestMatchers("/salas/**").permitAll()
+                        .requestMatchers("/categorias/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil),
