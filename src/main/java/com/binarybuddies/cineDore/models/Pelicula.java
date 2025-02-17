@@ -35,7 +35,7 @@ public class Pelicula
     private String imagenPoster;
 
     @ManyToOne
-    @JoinColumn(name = "idCategoria", nullable = false)
+    @JoinColumn(name = "idCategoria", referencedColumnName = "id", nullable = false)
     @JsonManagedReference
     private Categoria categoria;
 
