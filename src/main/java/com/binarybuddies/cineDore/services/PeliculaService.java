@@ -5,7 +5,6 @@ import com.binarybuddies.cineDore.dto.PeliculaDTO;
 import com.binarybuddies.cineDore.models.Funcion;
 import com.binarybuddies.cineDore.models.Pelicula;
 import com.binarybuddies.cineDore.repositories.PeliculaRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -34,7 +33,7 @@ public class PeliculaService {
                 pelicula.getDuracion(),
                 pelicula.getSinopsis(),
                 pelicula.getImagenPoster(),
-                pelicula.getCategoria().getCategoria().trim(),
+                pelicula.getCategoria().getNombre(),
                 pelicula.getClasificacion().getNombre(),
                 pelicula.getFormato().getNombre(),
                 pelicula.getLenguaje().getNombre(),

@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -20,7 +18,7 @@ public class Categoria {
     private Long id;
 
     @Column(nullable = false)
-    private String categoria;
+    private String nombre;
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
