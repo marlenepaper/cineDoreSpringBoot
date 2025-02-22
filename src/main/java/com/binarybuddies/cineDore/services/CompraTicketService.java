@@ -1,78 +1,67 @@
 package com.binarybuddies.cineDore.services;
 
-
-import com.binarybuddies.cineDore.config.ResourceNotFoundException;
 import com.binarybuddies.cineDore.dto.*;
-import com.binarybuddies.cineDore.models.Compra;
-import com.binarybuddies.cineDore.models.Usuario;
-import com.binarybuddies.cineDore.repositories.UsuarioRepository;
-import com.binarybuddies.cineDore.security.JwtUtil;
+import com.binarybuddies.cineDore.models.*;
+import com.binarybuddies.cineDore.repositories.CompraRepository;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CompraTicketService {
 
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final CompraRepository compraRepository;
+    private final TicketEntradaService ticketEntradaService;
+    private final UsuarioService usuarioService;
+    private final FuncionService funcionService;
+
+    public List<Compra> getAll() {
+        return compraRepository.findAll();
+    }
+
+    public Optional<Compra> getCompraById(long id) {
+        return compraRepository.findById(id);
+    }
 
     @Transactional
-    public TicketDTO realizarCompra(CompraDTO request) {
-        // if email already exists
-        if (usuarioRepository.existsByCorreoElectronico(request.getCorreoElectronico())) {
-            throw new RuntimeException("Email ya está registrado");
-        }
+    public Compra crearCompra(CompraDTO compraDTO) {
 
-        // Crear una nueva compra
-        Compra compra = new Compra();
-        compra.setNombre(request.getNombre());
-        compra.setApellidos(request.getApellidos());
-        compra.setCorreoElectronico(request.getCorreoElectronico());
-        compra.setContrasenia(passwordEncoder.encode(request.getContrasenia()));
-        compra.setTelefono(request.getTelefono());
-        compra.setIdentificacion(request.getIdentificacion());
-        compra.setFechaNacimiento(request.getFechaNacimiento());
-
-        usuario = usuarioRepository.save(usuario);
-
-        String token = jwtUtil.generateToken(usuario.getCorreoElectronico());
-        return new AuthResponseDTO(token, usuario);
-    }
-
-    public AuthResponseDTO login(LoginRequestDTO request) {
-        Usuario usuario = usuarioRepository.findByCorreoElectronico(request.getCorreoElectronico())
+        Usuario usuario = usuarioService.getUsuarioById(compraDTO.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        if (!passwordEncoder.matches(request.getContrasenia(), usuario.getContrasenia())) {
-            throw new RuntimeException("Contraseña incorrecta");
+
+        Funcion funcion = funcionService.getFuncionById(compraDTO.getFuncionId())
+                .orElseThrow(() -> new RuntimeException("Función no encontrada"));
+
+
+        Compra compra = new Compra();
+        compra.setUsuario(usuario);
+        compra.setFuncion(funcion);
+        compra.setTotalPago(compraDTO.getTotalPago());
+
+
+        Compra compraGuardada = compraRepository.save(compra);
+
+        // Procesar cada ticket de la compra
+        for (TicketEntradaDTO ticketDTO : compraDTO.getTickets()) {
+            TicketEntrada ticket = new TicketEntrada();
+            ticket.setCompra(compraGuardada);
+            ticket.setCodigoQr(ticketDTO.getCodigoQr());
+
+            // Establecer estado activo (asegúrate de que el ID 1 exista en la tabla de estados_ticket)
+            EstadoTicket estadoActivo = new EstadoTicket();
+            estadoActivo.setId(1L);
+            ticket.setEstado(estadoActivo);
+
+            ticketEntradaService.guardarTicket(ticket);
         }
 
-        String token = jwtUtil.generateToken(usuario.getCorreoElectronico());
-        return new AuthResponseDTO(token, usuario);
+        return compraGuardada;
     }
-
-    public UserProfileDTO getUserProfile(String email) {
-        Usuario usuario = usuarioRepository.findByCorreoElectronico(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
-
-        UserProfileDTO dto = new UserProfileDTO();
-        dto.setNombre(usuario.getNombre());
-        dto.setApellidos(usuario.getApellidos());
-        dto.setCorreoElectronico(usuario.getCorreoElectronico());
-        dto.setTelefono(usuario.getTelefono());
-
-        return dto;
-    }
-
-
-    public void deleteAccount(String email) {
-        Usuario usuario = usuarioRepository.findByCorreoElectronico(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
-        usuarioRepository.delete(usuario);
-    }
-
 }
+

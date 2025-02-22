@@ -20,4 +20,8 @@ public class TicketEntradaService {
     public Optional<TicketEntrada> getTicketEntradaById(long id) {
         return Optional.of(this.ticketEntradaRepository.getById(id));
     }
+
+    public TicketEntrada guardarTicket(TicketEntrada ticket) {
+        return ticketEntradaRepository.save(ticket);
+    }
 }
