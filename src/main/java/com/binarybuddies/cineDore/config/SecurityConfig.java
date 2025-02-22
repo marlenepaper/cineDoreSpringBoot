@@ -36,13 +36,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/peliculas/**").permitAll()
-                        .requestMatchers("/clasificaciones/**").permitAll()
-                        .requestMatchers("/lenguajes/**").permitAll()
-                        .requestMatchers("/formatos/**").permitAll()
-                        .requestMatchers("/salas/**").permitAll()
-                        .requestMatchers("/categorias/**").permitAll()
+                        .requestMatchers("/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil),
