@@ -46,6 +46,7 @@ public class PeliculaDTOService {
 
     private FuncionDTO convertFuncionToDTO(Funcion funcion) {
         return new FuncionDTO(
+                funcion.getId(),
                 funcion.getFechaHora().toString(),
                 funcion.getSala().getNombre()
         );

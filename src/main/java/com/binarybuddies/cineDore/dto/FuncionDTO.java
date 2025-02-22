@@ -4,12 +4,14 @@ import lombok.Data;
 
 @Data
 public class FuncionDTO {
+    private Long id;
     private String fechaHora;
     private String sala;
 
     public FuncionDTO() {}
 
-    public FuncionDTO(String fechaHora, String sala) {
+    public FuncionDTO(Long id, String fechaHora, String sala) {
+        this.id= id;
         this.fechaHora = fechaHora;
         this.sala = sala;
     }
