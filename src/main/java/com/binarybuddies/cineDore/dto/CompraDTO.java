@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class CompraDTO {
+    private Long compraId;
     private Long usuarioId;
     private Long funcionId;
     private BigDecimal totalPago;
@@ -15,7 +16,8 @@ public class CompraDTO {
     public CompraDTO() {
     }
 
-    public CompraDTO(Long usuarioId, Long funcionId, BigDecimal totalPago, List<TicketEntradaDTO> tickets) {
+    public CompraDTO(Long compraId,Long usuarioId, Long funcionId, BigDecimal totalPago, List<TicketEntradaDTO> tickets) {
+        this.compraId=compraId;
         this.usuarioId = usuarioId;
         this.funcionId = funcionId;
         this.totalPago = totalPago;
