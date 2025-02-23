@@ -41,4 +41,11 @@ public class CompraTicketController {
         Compra nuevaCompra = compraTicketService.crearCompra(compraDTO);
         return ResponseEntity.ok(nuevaCompra);
     }
+
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<Compra>> getTicketsByUserId(@PathVariable long usuarioId) {
+        List<Compra> compras = compraTicketService.getTicketsByUserId(usuarioId);
+        return ResponseEntity.ok(compras);
+    }
+
 }

@@ -28,6 +28,11 @@ public class CompraTicketService {
         return compraRepository.findById(id);
     }
 
+    public List<Compra> getTicketsByUserId(long usuarioId) {
+        return compraRepository.findByUsuarioId(usuarioId);
+    }
+
+
     @Transactional
     public Compra crearCompra(CompraDTO compraDTO) {
 
