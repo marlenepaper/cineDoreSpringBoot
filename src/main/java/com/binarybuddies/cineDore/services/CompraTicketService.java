@@ -8,8 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class CompraTicketService {
 
     public List<TicketDisplayDTO> getTicketsByUserId(long usuarioId) {
         List<Compra> compras = compraRepository.findByUsuarioId(usuarioId);
+        LocalDate fechaActual = LocalDate.now();
 
         return compras.stream().flatMap(compra ->
                 compra.getTickets().stream().map(ticket -> new TicketDisplayDTO(
@@ -43,7 +47,11 @@ public class CompraTicketService {
                         compra.getFuncion().getPelicula().getLenguaje().getNombre(),
                         compra.getFuncion().getPelicula().getDuracion()
                 ))
-        ).toList();
+                )
+                .filter(ticket -> LocalDate.parse(ticket.getFechaFuncion().substring(0, 10)).isAfter(fechaActual) ||
+                        LocalDate.parse(ticket.getFechaFuncion().substring(0, 10)).isEqual(fechaActual)) // Filtra por fecha actual o futura
+                .sorted(Comparator.comparing(ticket -> LocalDate.parse(ticket.getFechaFuncion().substring(0, 10)))) // Ordenar por fecha ascendente
+                .collect(Collectors.toList());
     }
 
 
