@@ -43,9 +43,10 @@ public class CompraTicketController {
     }
 
     @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<Compra>> getTicketsByUserId(@PathVariable long usuarioId) {
-        List<Compra> compras = compraTicketService.getTicketsByUserId(usuarioId);
-        return ResponseEntity.ok(compras);
+    public ResponseEntity<List<TicketDisplayDTO>> getTicketsByUserId(@PathVariable long usuarioId) {
+        List<TicketDisplayDTO> tickets = compraTicketService.getTicketsByUserId(usuarioId);
+        return ResponseEntity.ok(tickets);
     }
+
 
 }

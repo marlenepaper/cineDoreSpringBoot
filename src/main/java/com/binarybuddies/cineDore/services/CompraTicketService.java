@@ -28,9 +28,24 @@ public class CompraTicketService {
         return compraRepository.findById(id);
     }
 
-    public List<Compra> getTicketsByUserId(long usuarioId) {
-        return compraRepository.findByUsuarioId(usuarioId);
+    public List<TicketDisplayDTO> getTicketsByUserId(long usuarioId) {
+        List<Compra> compras = compraRepository.findByUsuarioId(usuarioId);
+
+        return compras.stream().flatMap(compra ->
+                compra.getTickets().stream().map(ticket -> new TicketDisplayDTO(
+                        compra.getFuncion().getId(),
+                        compra.getTotalPago(),
+                        ticket.getCodigoQr(),
+                        compra.getFuncion().getFechaHora().toString(),
+                        compra.getFuncion().getPelicula().getNombre(),
+                        compra.getFuncion().getPelicula().getImagenPoster(),
+                        compra.getFuncion().getPelicula().getClasificacion().getNombre(),
+                        compra.getFuncion().getPelicula().getLenguaje().getNombre(),
+                        compra.getFuncion().getPelicula().getDuracion()
+                ))
+        ).toList();
     }
+
 
 
     @Transactional
