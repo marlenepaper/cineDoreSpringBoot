@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +52,7 @@ public class CompraTicketService {
                 )
                 .filter(ticket -> LocalDate.parse(ticket.getFechaFuncion().substring(0, 10)).isAfter(fechaActual) ||
                         LocalDate.parse(ticket.getFechaFuncion().substring(0, 10)).isEqual(fechaActual)) // Filtra por fecha actual o futura
-                .sorted(Comparator.comparing(ticket -> LocalDate.parse(ticket.getFechaFuncion().substring(0, 10)))) // Ordenar por fecha ascendente
+                .sorted(Comparator.comparing(ticket -> LocalDateTime.parse(ticket.getFechaFuncion())))// Ordenar por fecha ascendente
                 .collect(Collectors.toList());
     }
 
