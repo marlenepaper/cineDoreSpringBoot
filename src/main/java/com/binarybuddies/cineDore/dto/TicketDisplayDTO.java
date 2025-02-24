@@ -19,4 +19,5 @@ public class TicketDisplayDTO {
     private String clasificacion;
     private String lenguaje;
     private int duracion;
+    private int cantidadTickets;
 }

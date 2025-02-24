@@ -45,7 +45,8 @@ public class CompraTicketService {
                         compra.getFuncion().getPelicula().getImagenPoster(),
                         compra.getFuncion().getPelicula().getClasificacion().getNombre(),
                         compra.getFuncion().getPelicula().getLenguaje().getNombre(),
-                        compra.getFuncion().getPelicula().getDuracion()
+                        compra.getFuncion().getPelicula().getDuracion(),
+                        compra.getTickets().size()
                 ))
                 )
                 .filter(ticket -> LocalDate.parse(ticket.getFechaFuncion().substring(0, 10)).isAfter(fechaActual) ||
