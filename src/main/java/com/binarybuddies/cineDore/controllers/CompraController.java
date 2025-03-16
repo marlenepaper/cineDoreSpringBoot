@@ -1,5 +1,6 @@
 package com.binarybuddies.cineDore.controllers;
 
+import com.binarybuddies.cineDore.dto.CompraDTO;
 import com.binarybuddies.cineDore.models.Compra;
 import com.binarybuddies.cineDore.services.CompraService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,13 @@ public class CompraController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Compra>> getById(@PathVariable long id) {
-        return ResponseEntity.ok(this.compraService.getCompraById(id));
+        Optional<Compra> compra = compraService.getCompraById(id);
+        return ResponseEntity.ok(compra);
+    }
+
+    @PostMapping("/crear")
+    public ResponseEntity<Compra> crearCompra(@RequestBody CompraDTO compraDTO) {
+        Compra nuevaCompra = compraService.crearCompra(compraDTO);
+        return ResponseEntity.ok(nuevaCompra);
     }
 }

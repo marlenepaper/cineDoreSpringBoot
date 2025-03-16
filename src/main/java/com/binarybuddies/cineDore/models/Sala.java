@@ -28,8 +28,4 @@ public class Sala
     @JsonBackReference
     private List<Funcion> funciones= new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "id_cine", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
-    private Cine cine;
 }

@@ -30,7 +30,7 @@ public class Usuario {
     @Email(message = "Email should be valid")
     private String correoElectronico;
 
-    @Column(name = "contraseña", nullable = false)
+    @Column(name = "contrasenia", nullable = false)
     @NotNull(message = "Contraseña no puede estar vacía")
     private String contrasenia;
 
@@ -43,9 +43,6 @@ public class Usuario {
 
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
-
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Cuenta cuenta;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Compra> compras= new ArrayList<>();

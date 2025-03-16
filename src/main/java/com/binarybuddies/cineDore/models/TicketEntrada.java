@@ -24,9 +24,8 @@ public class TicketEntrada
     @Column(name = "codigo_qr")
     private String codigoQr;
 
-    @ManyToOne
-    @JoinColumn(name = "estado_ticket_id", nullable = false)
-    private EstadoTicket estado;
+    @Column(name = "estado")
+    private Integer estado;
 
     @OneToMany(mappedBy = "ticketEntrada", cascade = CascadeType.ALL)
     private List<DetalleTicket> detalles = new ArrayList<>();
