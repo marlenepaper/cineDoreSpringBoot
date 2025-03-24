@@ -2,12 +2,13 @@ package com.binarybuddies.cineDore.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
-public class RegisterRequestDTO {
+public class UserRegisterRequestDTO {
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
 
@@ -21,6 +22,7 @@ public class RegisterRequestDTO {
     @NotBlank(message = "Contraseña es obligatoria")
     private String contrasenia;
 
+    @Pattern(regexp = "^[0-9]*$", message = "El número telefónico solo puede contener números")
     private String telefono;
 
     @NotBlank(message = "Identificación es obligatoria")
