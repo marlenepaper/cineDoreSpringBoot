@@ -1,16 +1,17 @@
 package com.binarybuddies.cineDore.services;
 
 import com.binarybuddies.cineDore.dto.CompraDTO;
-import com.binarybuddies.cineDore.dto.TicketEntradaDTO;
-import com.binarybuddies.cineDore.models.Compra;
-import com.binarybuddies.cineDore.models.Funcion;
-import com.binarybuddies.cineDore.models.TicketEntrada;
-import com.binarybuddies.cineDore.models.Usuario;
+import com.binarybuddies.cineDore.dto.DetalleTicketDTO;
+import com.binarybuddies.cineDore.models.*;
 import com.binarybuddies.cineDore.repositories.CompraRepository;
+import com.binarybuddies.cineDore.repositories.DetalleTicketRepository;
+import com.binarybuddies.cineDore.repositories.TipoEntradaRepository;
+import com.binarybuddies.cineDore.utils.QRGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,8 @@ public class CompraService {
     private final UsuarioService usuarioService;
     private final FuncionService funcionService;
     private final TicketEntradaService ticketEntradaService;
+    private final TipoEntradaRepository tipoEntradaRepository;
+    private final DetalleTicketRepository detalleTicketRepository;
 
     @Transactional
     public List<Compra> getAll() {
@@ -36,7 +39,7 @@ public class CompraService {
     }
 
     @Transactional
-    public Compra crearCompra(CompraDTO compraDTO) {
+    public Compra crearCompra(CompraDTO compraDTO) throws Exception {
 
         Usuario usuario = usuarioService.getUsuarioById(compraDTO.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -45,27 +48,42 @@ public class CompraService {
         Funcion funcion = funcionService.getFuncionById(compraDTO.getFuncionId())
                 .orElseThrow(() -> new RuntimeException("Función no encontrada"));
 
-
         Compra compra = new Compra();
         compra.setUsuario(usuario);
         compra.setFuncion(funcion);
         compra.setTotalPago(compraDTO.getTotalPago());
 
-
         Compra compraGuardada = compraRepository.save(compra);
 
-        // Procesar cada ticket de la compra
-        for (TicketEntradaDTO ticketDTO : compraDTO.getTickets()) {
-            TicketEntrada ticket = new TicketEntrada();
-            ticket.setCompra(compraGuardada);
-            ticket.setCodigoQr(ticketDTO.getCodigoQr());
+        // Crea 1 solo ticket
+        TicketEntrada ticket = new TicketEntrada();
+        ticket.setCompra(compraGuardada);
+        TicketEntrada ticketGuardado = ticketEntradaService.guardarTicket(ticket);
 
-            // Establecer estado activo
-            ticket.setEstado(1);
+        //Generar código QR
+        String qrContent = "Compra ID: " + compraGuardada.getId() + ", Ticket ID: " + ticketGuardado.getId();
+        String qrBase64 = QRGenerator.generateQrBase64(qrContent);
 
-            ticketEntradaService.guardarTicket(ticket);
+        ticketGuardado.setCodigoQr(qrBase64);
+        ticketEntradaService.guardarTicket(ticketGuardado);
+        compraGuardada.setTicket(ticketGuardado);
+        //Lista de detalles asociada al ticket. Cada detalle es 1 entrada
+        List<DetalleTicket> detalles = new ArrayList<>();
+        for (DetalleTicketDTO detalleDTO : compraDTO.getTickets()) {
+            TipoEntrada tipoEntrada = tipoEntradaRepository.findById(detalleDTO.getTipoEntradaId())
+                    .orElseThrow(() -> new RuntimeException("Tipo de entrada no encontrado"));
+
+            for (int i = 0; i < detalleDTO.getCantidad(); i++) {
+                // Relacionarlo con su tipo
+                DetalleTicket detalle = new DetalleTicket();
+                detalle.setTicketEntrada(ticketGuardado);
+                detalle.setTipoEntrada(tipoEntrada);
+                detalle.setEstado(1);
+                detalles.add(detalle);
+            }
+
         }
-
+        detalleTicketRepository.saveAll(detalles);
         return compraGuardada;
     }
 }

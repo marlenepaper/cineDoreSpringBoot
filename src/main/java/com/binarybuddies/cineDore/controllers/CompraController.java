@@ -31,7 +31,7 @@ public class CompraController {
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<Compra> crearCompra(@RequestBody CompraDTO compraDTO) {
+    public ResponseEntity<Compra> crearCompra(@RequestBody CompraDTO compraDTO) throws Exception {
         Compra nuevaCompra = compraService.crearCompra(compraDTO);
         return ResponseEntity.ok(nuevaCompra);
     }

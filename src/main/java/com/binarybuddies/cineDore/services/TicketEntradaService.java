@@ -27,6 +27,7 @@ public class TicketEntradaService {
     public List<TicketEntrada> getAll() {
         return ticketEntradaRepository.findAll();
     }
+
     public Optional<TicketEntrada> getTicketEntradaById(long id) {
         return Optional.of(this.ticketEntradaRepository.getById(id));
     }
@@ -35,35 +36,34 @@ public class TicketEntradaService {
         return ticketEntradaRepository.save(ticket);
     }
 
-    public boolean esActivo(TicketEntrada ticket) {
-        return ticket.getEstado() == 1;
-    }
-
-    public boolean esInactivo(TicketEntrada ticket) {
-        return ticket.getEstado() == 2;
-    }
 
     public List<TicketDisplayDTO> getTicketsByUserId(long usuarioId) {
         List<Compra> compras = compraRepository.findByUsuarioId(usuarioId);
         LocalDate fechaActual = LocalDate.now();
 
-        return compras.stream().flatMap(compra ->
-                        compra.getTickets().stream().map(ticket -> new TicketDisplayDTO(
-                                compra.getFuncion().getId(),
-                                compra.getTotalPago(),
-                                ticket.getCodigoQr(),
-                                compra.getFuncion().getFechaHora().toString(),
-                                compra.getFuncion().getPelicula().getNombre(),
-                                compra.getFuncion().getPelicula().getImagenPoster(),
-                                compra.getFuncion().getPelicula().getClasificacion().getNombre(),
-                                compra.getFuncion().getPelicula().getLenguaje().getNombre(),
-                                compra.getFuncion().getPelicula().getDuracion(),
-                                compra.getTickets().size()
-                        ))
-                )
-                .filter(ticket -> LocalDate.parse(ticket.getFechaFuncion().substring(0, 10)).isAfter(fechaActual) ||
-                        LocalDate.parse(ticket.getFechaFuncion().substring(0, 10)).isEqual(fechaActual)) // Filtra por fecha actual o futura
-                .sorted(Comparator.comparing(ticket -> LocalDateTime.parse(ticket.getFechaFuncion())))// Ordenar por fecha ascendente
+        return compras.stream()
+                .filter(compra -> compra.getTicket() != null)
+                .map(compra -> {
+                    TicketEntrada ticket = compra.getTicket();
+
+                    return new TicketDisplayDTO(
+                            compra.getFuncion().getId(),
+                            compra.getTotalPago(),
+                            ticket.getCodigoQr(),
+                            compra.getFuncion().getFechaHora().toString(),
+                            compra.getFuncion().getPelicula().getNombre(),
+                            compra.getFuncion().getPelicula().getImagenPoster(),
+                            compra.getFuncion().getPelicula().getClasificacion().getNombre(),
+                            compra.getFuncion().getPelicula().getLenguaje().getNombre(),
+                            compra.getFuncion().getPelicula().getDuracion(),
+                            ticket.getDetalles().size() // Cantidad total de entradas (detalle por entrada)
+                    );
+                })
+                .filter(dto -> {
+                    LocalDate fechaFuncion = LocalDate.parse(dto.getFechaFuncion().substring(0, 10));
+                    return fechaFuncion.isEqual(fechaActual) || fechaFuncion.isAfter(fechaActual);
+                })
+                .sorted(Comparator.comparing(dto -> LocalDateTime.parse(dto.getFechaFuncion())))
                 .collect(Collectors.toList());
     }
 }

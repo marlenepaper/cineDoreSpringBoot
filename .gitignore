@@ -46,7 +46,7 @@ build/
 
 .env
 secrets.properties
-
+/src/main/resources/secrets.properties
 
 *.log
 hs_err_pid*

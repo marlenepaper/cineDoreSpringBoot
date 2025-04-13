@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -23,7 +27,12 @@ public class DetalleTicket {
     @JoinColumn(name = "id_tipo_entrada", referencedColumnName = "id", nullable = false)
     private TipoEntrada tipoEntrada;
 
-    @Column(name = "cantidad", nullable = false)
-    @Min(1)
-    private Integer cantidad;
+    @Column(name = "estado")
+    private Integer estado;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }

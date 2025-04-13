@@ -1,9 +1,13 @@
 package com.binarybuddies.cineDore.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,17 +21,21 @@ public class TicketEntrada
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_compra", referencedColumnName = "id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_compra", nullable = false)
+    @JsonBackReference
     private Compra compra;
-
-    @Column(name = "codigo_qr")
-    private String codigoQr;
-
-    @Column(name = "estado")
-    private Integer estado;
 
     @OneToMany(mappedBy = "ticketEntrada", cascade = CascadeType.ALL)
     private List<DetalleTicket> detalles = new ArrayList<>();
+
+    @Column(name = "codigo_qr", columnDefinition = "TEXT")
+    private String codigoQr;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }
 

@@ -11,12 +11,12 @@ public class CompraDTO {
     private Long usuarioId;
     private Long funcionId;
     private BigDecimal totalPago;
-    private List<TicketEntradaDTO> tickets;
+    private List<DetalleTicketDTO> tickets;
 
     public CompraDTO() {
     }
 
-    public CompraDTO(Long compraId,Long usuarioId, Long funcionId, BigDecimal totalPago, List<TicketEntradaDTO> tickets) {
+    public CompraDTO(Long compraId,Long usuarioId, Long funcionId, BigDecimal totalPago, List<DetalleTicketDTO> tickets) {
         this.compraId=compraId;
         this.usuarioId = usuarioId;
         this.funcionId = funcionId;

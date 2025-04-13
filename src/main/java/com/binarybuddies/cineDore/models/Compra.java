@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -42,12 +44,18 @@ public class Compra
     @Positive(message = "Total debe ser positivo")
     private BigDecimal totalPago;
 
-    @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "compra", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<TicketEntrada> tickets = new ArrayList<>();
+    private TicketEntrada ticket;
 
     @PrePersist
     protected void onCreate() {
         fechaCompra = LocalDateTime.now();
     }
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }
