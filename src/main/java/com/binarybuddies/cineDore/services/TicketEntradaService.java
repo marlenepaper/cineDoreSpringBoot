@@ -21,6 +21,7 @@ public class TicketEntradaService {
     @Autowired
     private TicketEntradaRepository ticketEntradaRepository;
 
+    @Autowired
     private CompraRepository compraRepository;
 
     @Transactional
@@ -40,7 +41,7 @@ public class TicketEntradaService {
     public List<TicketDisplayDTO> getTicketsByUserId(long usuarioId) {
         List<Compra> compras = compraRepository.findByUsuarioId(usuarioId);
         LocalDate fechaActual = LocalDate.now();
-
+        System.out.println("compras cantidad:" + compras.size());
         return compras.stream()
                 .filter(compra -> compra.getTicket() != null)
                 .map(compra -> {
@@ -56,12 +57,13 @@ public class TicketEntradaService {
                             compra.getFuncion().getPelicula().getClasificacion().getNombre(),
                             compra.getFuncion().getPelicula().getLenguaje().getNombre(),
                             compra.getFuncion().getPelicula().getDuracion(),
+                            compra.getFuncion().getSala().getNombre(),
                             ticket.getDetalles().size() // Cantidad total de entradas (detalle por entrada)
                     );
                 })
                 .filter(dto -> {
                     LocalDate fechaFuncion = LocalDate.parse(dto.getFechaFuncion().substring(0, 10));
-                    return fechaFuncion.isEqual(fechaActual) || fechaFuncion.isAfter(fechaActual);
+                    return fechaFuncion.isEqual(fechaActual) || fechaFuncion.isBefore(fechaActual); //cambiar a isAfter
                 })
                 .sorted(Comparator.comparing(dto -> LocalDateTime.parse(dto.getFechaFuncion())))
                 .collect(Collectors.toList());

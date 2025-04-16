@@ -23,10 +23,19 @@ public class CompraService {
     @Autowired
     private CompraRepository compraRepository;
 
+    @Autowired
     private final UsuarioService usuarioService;
+
+    @Autowired
     private final FuncionService funcionService;
+
+    @Autowired
     private final TicketEntradaService ticketEntradaService;
+
+    @Autowired
     private final TipoEntradaRepository tipoEntradaRepository;
+
+    @Autowired
     private final DetalleTicketRepository detalleTicketRepository;
 
     @Transactional

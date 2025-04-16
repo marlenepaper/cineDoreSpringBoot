@@ -1,5 +1,6 @@
 package com.binarybuddies.cineDore.dto;
 
+import com.binarybuddies.cineDore.models.Sala;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,6 @@ public class TicketDisplayDTO {
     private String clasificacion;
     private String lenguaje;
     private int duracion;
+    private String sala;
     private int cantidadTickets;
 }
