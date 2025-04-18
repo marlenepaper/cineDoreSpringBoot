@@ -36,7 +36,7 @@ public class PeliculaService {
                 pelicula.getImagenPoster(),
                 pelicula.getCategoria().getNombre(),
                 pelicula.getClasificacion().getNombre(),
-                pelicula.getFormato().getNombre(),
+                pelicula.getFormato().getDetalle(),
                 pelicula.getLenguaje().getNombre(),
                 pelicula.getColor().getColor(),
                 pelicula.getFunciones().stream()

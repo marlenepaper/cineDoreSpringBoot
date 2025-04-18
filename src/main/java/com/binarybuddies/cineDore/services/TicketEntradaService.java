@@ -63,7 +63,7 @@ public class TicketEntradaService {
                 })
                 .filter(dto -> {
                     LocalDate fechaFuncion = LocalDate.parse(dto.getFechaFuncion().substring(0, 10));
-                    return fechaFuncion.isEqual(fechaActual) || fechaFuncion.isBefore(fechaActual); //cambiar a isAfter
+                    return fechaFuncion.isEqual(fechaActual) || fechaFuncion.isAfter(fechaActual); //cambiar a isAfter
                 })
                 .sorted(Comparator.comparing(dto -> LocalDateTime.parse(dto.getFechaFuncion())))
                 .collect(Collectors.toList());
