@@ -20,6 +20,6 @@ public class TipoEntradaService {
         return tipoEntradaRepository.findAll();
     }
     public Optional<TipoEntrada> getTipoEntradaById(long id) {
-        return Optional.of(this.tipoEntradaRepository.getById(id));
+        return this.tipoEntradaRepository.getReferenceById(id);
     }
 }

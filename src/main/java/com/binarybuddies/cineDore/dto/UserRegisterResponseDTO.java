@@ -5,6 +5,10 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+/**
+ * DTO para crear el registro del usuario con token
+ */
+
 @Data
 public class UserRegisterResponseDTO {
     private Long id;

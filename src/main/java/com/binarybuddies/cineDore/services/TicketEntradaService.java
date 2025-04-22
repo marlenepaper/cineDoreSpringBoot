@@ -30,22 +30,35 @@ public class TicketEntradaService {
     }
 
     public Optional<TicketEntrada> getTicketEntradaById(long id) {
-        return Optional.of(this.ticketEntradaRepository.getById(id));
+        return this.ticketEntradaRepository.getReferenceById(id);
     }
 
     public TicketEntrada guardarTicket(TicketEntrada ticket) {
         return ticketEntradaRepository.save(ticket);
     }
 
+    /**
+     * Devuelve los tickets del usuario
+     *
+     * @param usuarioId El id del usuario
+     * @return Lista de TicketDisplayDTO
+     */
 
     public List<TicketDisplayDTO> getTicketsByUserId(long usuarioId) {
         List<Compra> compras = compraRepository.findByUsuarioId(usuarioId);
         LocalDate fechaActual = LocalDate.now();
         System.out.println("compras cantidad:" + compras.size());
+
+        //Accede a la lista de compras del usuario. Cada compra tiene un ticket asociado
         return compras.stream()
                 .filter(compra -> compra.getTicket() != null)
                 .map(compra -> {
                     TicketEntrada ticket = compra.getTicket();
+
+                    /*
+                    * Por cada ticket, genera un TicketDisplayDTO, lo que se mostrará en el front
+                    * Los filtra por fecha (actual o posterior)
+                    */
 
                     return new TicketDisplayDTO(
                             compra.getFuncion().getId(),
@@ -63,7 +76,7 @@ public class TicketEntradaService {
                 })
                 .filter(dto -> {
                     LocalDate fechaFuncion = LocalDate.parse(dto.getFechaFuncion().substring(0, 10));
-                    return fechaFuncion.isEqual(fechaActual) || fechaFuncion.isAfter(fechaActual); //cambiar a isAfter
+                    return fechaFuncion.isEqual(fechaActual) || fechaFuncion.isAfter(fechaActual);
                 })
                 .sorted(Comparator.comparing(dto -> LocalDateTime.parse(dto.getFechaFuncion())))
                 .collect(Collectors.toList());

@@ -5,6 +5,10 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * DTO para los datos de las peliculas
+ */
+
 @Data
 public class PeliculaDTO {
     private Long id;

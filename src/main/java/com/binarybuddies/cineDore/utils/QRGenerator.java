@@ -8,6 +8,10 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 
+/**
+ * Genera el código qr para el ticket
+ */
+
 public class QRGenerator {
     public static String generateQrBase64(String text) throws Exception {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();

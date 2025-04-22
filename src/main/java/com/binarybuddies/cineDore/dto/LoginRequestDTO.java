@@ -3,6 +3,9 @@ package com.binarybuddies.cineDore.dto;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+/**
+ * DTO para recibir los credenciales para el login
+ */
 
 @Data
 public class LoginRequestDTO {

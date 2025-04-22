@@ -38,14 +38,23 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
     public Optional<Usuario> getUsuarioById(long id) {
-        return Optional.of(this.usuarioRepository.getById(id));
+        return this.usuarioRepository.getReferenceById(id);
     }
 
+    /**
+     * Registro del usuario
+     *
+     * @param request Solicitud de datos del usuario
+     * @return UserRegisterResponseDTO, se crea el usuario con un token
+     * @throws IllegalArgumentException si el email ya está registrado
+     */
     @Transactional
     public UserRegisterResponseDTO register(UserRegisterRequestDTO request) {
         if (usuarioRepository.existsByCorreoElectronico(request.getCorreoElectronico())) {
             throw new IllegalArgumentException("El email ya está registrado");
         }
+
+        //Se crea un objeto usuario y se guarda en la base de datos
         Usuario usuario = new Usuario();
         usuario.setNombre(request.getNombre());
         usuario.setApellidos(request.getApellidos());
@@ -55,10 +64,18 @@ public class UsuarioService {
         usuario.setIdentificacion(request.getIdentificacion());
         usuario.setFechaNacimiento(request.getFechaNacimiento());
         usuario = usuarioRepository.save(usuario);
+
         String token = jwtUtil.generateToken(usuario.getCorreoElectronico());
         return new UserRegisterResponseDTO(token, usuario);
     }
-
+    /**
+     * Actualización de datos del usuario
+     *
+     * @param userDTO Solicitud de datos del usuario
+     * @param id El id del usuario
+     * @return Usuario con los datos nuevos
+     * @throws RuntimeException si no encuentra el usuario
+     */
     public Usuario updateUser(UserDTO userDTO, Long id) {
         Usuario usuarioExistente = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -74,6 +91,13 @@ public class UsuarioService {
         return usuarioRepository.save(usuarioExistente);
     }
 
+    /**
+     * Login del usuario
+     *
+     * @param request Solicitud de credenciales
+     * @return UserRegisterResponseDTO con un nuevo token
+     * @throws RuntimeException contraseña incorrecta
+     */
     public UserRegisterResponseDTO login(LoginRequestDTO request) {
         Usuario usuario = usuarioRepository.findByCorreoElectronico(request.getCorreoElectronico())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -84,7 +108,13 @@ public class UsuarioService {
         return new UserRegisterResponseDTO(token, usuario);
     }
 
-
+    /**
+     * Traer datos del usuario
+     *
+     * @param email Solicitud del correo
+     * @return UserDTO con los datos necesarios
+     * @throws ResourceNotFoundException no encuentra el usuario
+     */
     public UserDTO getUserProfile(String email) {
         Usuario usuario = usuarioRepository.findByCorreoElectronico(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
@@ -98,6 +128,12 @@ public class UsuarioService {
         return dto;
     }
 
+    /**
+     * Borrar cuenta del usuario
+     *
+     * @param email Solicitud del correo
+     * @throws ResourceNotFoundException no encuentra el usuario
+     */
     public void deleteAccount(String email) {
         Usuario usuario = usuarioRepository.findByCorreoElectronico(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));

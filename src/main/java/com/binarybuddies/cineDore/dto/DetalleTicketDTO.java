@@ -2,6 +2,10 @@ package com.binarybuddies.cineDore.dto;
 
 import lombok.Data;
 
+/**
+ * DTO para recibir datos de los tickets del front, como tipo de tickets y cantidad
+ */
+
 @Data
 public class DetalleTicketDTO {
     private Long tipoEntradaId;

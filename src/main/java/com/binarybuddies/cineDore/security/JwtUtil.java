@@ -12,6 +12,10 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+/**
+ * Genera y valida los tokens
+ */
+
 @Component
 public class JwtUtil {
 

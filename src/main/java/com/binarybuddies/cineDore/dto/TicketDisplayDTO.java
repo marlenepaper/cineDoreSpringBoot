@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * DTO para enviar al front con los datos del ticket
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

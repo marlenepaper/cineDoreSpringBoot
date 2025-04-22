@@ -26,6 +26,14 @@ public class PeliculaService {
     public Optional<PeliculaDTO> getPeliculaById(long id) {
         return peliculaRepository.findById(id).map(this::convertToDTO);
     }
+
+    /**
+     * Generar una PeliculaDTO con su respectiva FuncionDTO
+     *
+     * @param pelicula Una pelicula
+     * @return Un DTO de pelicula
+     */
+
     private PeliculaDTO convertToDTO(Pelicula pelicula) {
         return new PeliculaDTO(
                 pelicula.getId(),
@@ -44,6 +52,13 @@ public class PeliculaService {
                         .collect(Collectors.toList())
         );
     }
+
+    /**
+     * Genera una funcionDTO
+     *
+     * @param funcion Una función
+     * @return Un DTO de función
+     */
 
     private FuncionDTO convertFuncionToDTO(Funcion funcion) {
         return new FuncionDTO(

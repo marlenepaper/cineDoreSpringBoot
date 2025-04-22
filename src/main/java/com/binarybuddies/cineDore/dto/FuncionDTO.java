@@ -2,6 +2,10 @@ package com.binarybuddies.cineDore.dto;
 
 import lombok.Data;
 
+/**
+ * DTO para las funciones
+ */
+
 @Data
 public class FuncionDTO {
     private Long id;

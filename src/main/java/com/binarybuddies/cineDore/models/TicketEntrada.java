@@ -11,6 +11,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representa al ticket que se genera con la compra.
+ * Lleva el código qr y contiene los datos de las entradas.
+ */
+
 @Data
 @Entity
 @Table(name = "tickets_entrada")

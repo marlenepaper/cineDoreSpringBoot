@@ -4,6 +4,10 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+/**
+ * DTO para datos del usuario
+ */
+
 @Data
 public class UserDTO {
     private Long id;

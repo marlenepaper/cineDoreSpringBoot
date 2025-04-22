@@ -16,7 +16,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
-
+/**
+ * Configuración de seguridad que define accesos mediante JWT y protege rutas específicas.
+ */
 @Configuration
 public class SecurityConfig {
 

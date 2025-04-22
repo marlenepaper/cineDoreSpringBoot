@@ -7,6 +7,10 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+/**
+ * DTO para recibir los datos de registro del usuario
+ */
+
 @Data
 public class UserRegisterRequestDTO {
     @NotBlank(message = "El nombre es obligatorio")
