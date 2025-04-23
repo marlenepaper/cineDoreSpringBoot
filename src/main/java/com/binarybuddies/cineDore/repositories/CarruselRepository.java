@@ -1,4 +1,3 @@
-// src/main/java/com/binarybuddies/cineDore/repositories/CarruselRepository.java
 package com.binarybuddies.cineDore.repositories;
 
 import com.binarybuddies.cineDore.models.Carrusel;

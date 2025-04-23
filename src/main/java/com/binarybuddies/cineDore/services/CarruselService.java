@@ -1,4 +1,3 @@
-// src/main/java/com/binarybuddies/cineDore/services/CarruselService.java
 package com.binarybuddies.cineDore.services;
 
 import com.binarybuddies.cineDore.models.Carrusel;
@@ -6,7 +5,6 @@ import com.binarybuddies.cineDore.repositories.CarruselRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Month;
 import java.time.LocalDate;
 import java.util.List;
 

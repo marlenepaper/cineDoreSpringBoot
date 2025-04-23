@@ -28,7 +28,7 @@ public class Carrusel {
     private String imagenPoster;
 
     @Column(name = "mes", nullable = false)
-    private String mes; // El mes en el que debe aparecer el carrusel, puede ser algo como "Abril", "Mayo", etc.
+    private String mes; // El mes en el que debe aparecer el carrusel, por ejemplo, "APRIL"
 
     @Column(name = "anio", nullable = false)
     private int anio; // El año en el que debe aparecer el carrusel, por ejemplo 2025.

@@ -1,4 +1,3 @@
-// src/main/java/com/binarybuddies/cineDore/controllers/CarruselController.java
 package com.binarybuddies.cineDore.controllers;
 
 import com.binarybuddies.cineDore.models.Carrusel;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/carrusel")
+@RequestMapping("/api/carrusel")  // Es mejor tener un prefijo "api" para las rutas REST
 public class CarruselController {
 
     @Autowired
