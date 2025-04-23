@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/carrusel")  // Es mejor tener un prefijo "api" para las rutas REST
+@RequestMapping("/carrusel")
 public class CarruselController {
 
     @Autowired
