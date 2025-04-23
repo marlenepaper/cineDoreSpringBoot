@@ -1,6 +1,6 @@
 package com.binarybuddies.cineDore.controllers;
 
-import com.binarybuddies.cineDore.models.Carrusel;
+import com.binarybuddies.cineDore.dto.CarruselDTO;
 import com.binarybuddies.cineDore.services.CarruselService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ public class CarruselController {
     private CarruselService carruselService;
 
     @GetMapping
-    public List<Carrusel> getCarruselDataForCurrentMonth() {
-        return carruselService.getCarruselDataForCurrentMonth();
+    public List<CarruselDTO> getCarruselDataForCurrentMonth() {
+        return carruselService.getCarruselDataForCurrentMonth(); // Devuelve la lista de DTOs
     }
 }
