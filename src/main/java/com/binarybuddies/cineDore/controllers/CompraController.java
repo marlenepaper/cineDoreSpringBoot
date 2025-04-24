@@ -4,6 +4,7 @@ import com.binarybuddies.cineDore.dto.CompraDTO;
 import com.binarybuddies.cineDore.models.Compra;
 import com.binarybuddies.cineDore.services.CompraService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class CompraController {
     }
 
     @Operation(summary = "Obtener compra por ID")
+    @Parameter(name = "id", required = true)
     @ApiResponse(responseCode = "200", description = "Compra encontrada")
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Compra>> getById(@PathVariable long id) {
@@ -39,6 +41,7 @@ public class CompraController {
     }
 
     @Operation(summary = "Crear compra")
+    @Parameter(name = "compraDTO", required = true)
     @ApiResponse(responseCode = "201", description = "Compra creada")
     @ApiResponse(responseCode = "400", description = "Datos inválidos")
     @ApiResponse(responseCode = "500", description = "Error interno al crear la compra")

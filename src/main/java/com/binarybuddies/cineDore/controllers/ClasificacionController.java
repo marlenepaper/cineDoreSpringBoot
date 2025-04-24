@@ -3,6 +3,7 @@ package com.binarybuddies.cineDore.controllers;
 import com.binarybuddies.cineDore.models.Clasificacion;
 import com.binarybuddies.cineDore.services.ClasificacionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class ClasificacionController {
     }
 
     @Operation(summary = "Obtener clasificacion por ID")
+    @Parameter(name = "id", required = true)
     @ApiResponse(responseCode = "200", description = "Clasificacion encontrada")
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Clasificacion>> getById(@PathVariable long id) {

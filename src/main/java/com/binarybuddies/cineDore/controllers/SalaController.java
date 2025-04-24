@@ -3,6 +3,7 @@ package com.binarybuddies.cineDore.controllers;
 import com.binarybuddies.cineDore.models.Sala;
 import com.binarybuddies.cineDore.services.SalaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class SalaController {
     }
 
     @Operation(summary = "Obtener sala por ID")
+    @Parameter(name = "id", required = true)
     @ApiResponse(responseCode = "200", description = "Sala encontrada")
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Sala>> getById(@PathVariable long id) {

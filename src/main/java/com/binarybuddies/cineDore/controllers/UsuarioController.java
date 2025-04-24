@@ -1,6 +1,7 @@
 package com.binarybuddies.cineDore.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.Authentication;
@@ -39,6 +40,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Obtener usuario por ID")
+    @Parameter(name = "id", required = true)
     @ApiResponse(responseCode = "200", description = "Usuario encontrado")
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Usuario>> getUsuarioById(@PathVariable long id) {
@@ -46,6 +48,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Crear usuario con datos solicitados")
+    @Parameter(name = "request", required = true)
     @ApiResponse(responseCode = "200", description = "Usuario creado correctamente")
     @ApiResponse(responseCode = "409", description = "El usuario ya existe")
     @ApiResponse(responseCode = "500", description = "Error interno al registar usuario")
@@ -65,6 +68,8 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Actualizar datos de usuario por su id y datos anteriores")
+    @Parameter(name = "id", required = true)
+    @Parameter(name = "userDTO", required = true)
     @ApiResponse(responseCode = "200", description = "Usuario actualizado correctamente")
     @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     @ApiResponse(responseCode = "500", description = "Error interno al actualizar usuario")
@@ -81,6 +86,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Login con credenciales")
+    @Parameter(name = "request", required = true)
     @ApiResponse(responseCode = "200", description = "Login exitoso")
     @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     @PostMapping("/login")
@@ -89,6 +95,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Obtener datos de usuario con autenticacion")
+    @Parameter(name = "authentication", required = true)
     @ApiResponse(responseCode = "200", description = "Datos de usuario encontrados")
     @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     @GetMapping("/profile")
@@ -99,6 +106,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Eliminar cuenta de usuario con autenticacion")
+    @Parameter(name = "authentication", required = true)
     @ApiResponse(responseCode = "200", description = "Cuenta eliminada exitosamente")
     @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     @DeleteMapping("/delete")

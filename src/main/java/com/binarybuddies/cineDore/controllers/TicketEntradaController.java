@@ -4,6 +4,7 @@ import com.binarybuddies.cineDore.dto.TicketDisplayDTO;
 import com.binarybuddies.cineDore.models.TicketEntrada;
 import com.binarybuddies.cineDore.services.TicketEntradaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class TicketEntradaController {
     }
 
     @Operation(summary = "Obtener ticket de entrada por ID")
+    @Parameter(name = "id", required = true)
     @ApiResponse(responseCode = "200", description = "Ticket de entrada encontrado")
     @GetMapping("/{id}")
     public ResponseEntity<Optional<TicketEntrada>> getById(@PathVariable long id) {
@@ -38,6 +40,7 @@ public class TicketEntradaController {
     }
 
     @Operation(summary = "Obtener lista de tickets por ID de usuario")
+    @Parameter(name = "usuarioId", required = true)
     @ApiResponse(responseCode = "200", description = "Lista de tickets encontrada")
     @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     @GetMapping("/usuario/{usuarioId}")

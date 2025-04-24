@@ -3,6 +3,7 @@ package com.binarybuddies.cineDore.controllers;
 import com.binarybuddies.cineDore.models.DetalleTicket;
 import com.binarybuddies.cineDore.services.DetalleTicketService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class DetalleTicketController {
     }
 
     @Operation(summary = "Obtener detalle del ticket por ID")
+    @Parameter(name = "id", required = true)
     @ApiResponse(responseCode = "200", description = "Detalle del ticket encontrado")
     @GetMapping("/{id}")
     public ResponseEntity<Optional<DetalleTicket>> getById(@PathVariable long id) {

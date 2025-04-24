@@ -3,6 +3,7 @@ package com.binarybuddies.cineDore.controllers;
 import com.binarybuddies.cineDore.models.TipoEntrada;
 import com.binarybuddies.cineDore.services.TipoEntradaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class TipoEntradaController {
     }
 
     @Operation(summary = "Obtener tipo de entrada por ID")
+    @Parameter(name = "id", required = true)
     @ApiResponse(responseCode = "200", description = "Tipo de entrada encontrada")
     @GetMapping("/{id}")
     public ResponseEntity<Optional<TipoEntrada>> getById(@PathVariable long id) {

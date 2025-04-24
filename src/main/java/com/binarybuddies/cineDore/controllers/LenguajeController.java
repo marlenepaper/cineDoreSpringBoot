@@ -3,6 +3,7 @@ package com.binarybuddies.cineDore.controllers;
 import com.binarybuddies.cineDore.models.Lenguaje;
 import com.binarybuddies.cineDore.services.LenguajeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class LenguajeController {
     }
 
     @Operation(summary = "Obtener lenguaje por ID")
+    @Parameter(name = "id", required = true)
     @ApiResponse(responseCode = "200", description = "Lenguaje encontrada")
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Lenguaje>> getById(@PathVariable long id) {

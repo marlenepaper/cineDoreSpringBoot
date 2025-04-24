@@ -3,6 +3,7 @@ package com.binarybuddies.cineDore.controllers;
 import com.binarybuddies.cineDore.dto.PeliculaDTO;
 import com.binarybuddies.cineDore.services.PeliculaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ public class PeliculaController {
     }
 
     @Operation(summary = "Obtener pelicula dto por ID de pelicula")
+    @Parameter(name = "id", required = true)
     @ApiResponse(responseCode = "200", description = "Pelicula dto encontrada")
     @ApiResponse(responseCode = "404", description = "Pelicula no encontrado")
     @GetMapping("/{id}")
