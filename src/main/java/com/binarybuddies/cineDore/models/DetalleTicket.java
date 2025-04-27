@@ -22,7 +22,7 @@ public class DetalleTicket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Agregar un campo de identificación obligatorio
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_ticket_entrada", referencedColumnName = "id", nullable = false)

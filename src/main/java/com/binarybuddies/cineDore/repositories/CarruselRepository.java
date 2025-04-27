@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface CarruselRepository extends JpaRepository<Carrusel, Long> {
 
-    // Método para obtener los elementos del carrusel que coinciden con el mes y año actuales
     List<Carrusel> findByMesAndAnio(String mes, int anio);
 }

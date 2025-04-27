@@ -2,7 +2,9 @@ package com.binarybuddies.cineDore.dto;
 
 import lombok.Data;
 
-
+/**
+ * DTO para enviar el contenido del carrusel
+ */
 @Data
 public class CarruselDTO {
     private Long id;

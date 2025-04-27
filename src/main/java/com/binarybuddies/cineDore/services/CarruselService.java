@@ -9,22 +9,29 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
+/**
+ * Servicio para gestionar los datos del carrusel de películas.
+ */
 @Service
 public class CarruselService {
 
     @Autowired
     private CarruselRepository carruselRepository;
-
+    /**
+     * Obtiene los datos del carrusel correspondientes al mes y año actuales.
+     * <p>
+     * Consulta la base de datos por los registros del mes y año actuales,
+     * los transforma en objetos {@link CarruselDTO} y los devuelve como una lista.
+     * </p>
+     *
+     * @return Lista de {@link CarruselDTO} con los datos del carrusel para el mes actual.
+     */
     public List<CarruselDTO> getCarruselDataForCurrentMonth() {
-        // Obtener el mes y el año actuales
-        String currentMonth = LocalDate.now().getMonth().toString(); // "APRIL", "MAY", etc.
+        String currentMonth = LocalDate.now().getMonth().toString();
         int currentYear = LocalDate.now().getYear();
 
-        // Obtener la lista de Carrusel desde el repositorio
         List<Carrusel> carruselList = carruselRepository.findByMesAndAnio(currentMonth, currentYear);
 
-        // Convertir la lista de Carrusel a CarruselDTO
         return carruselList.stream()
                 .map(carrusel -> {
                     CarruselDTO carruselDTO = new CarruselDTO();
@@ -36,6 +43,6 @@ public class CarruselService {
                     carruselDTO.setAnio(carrusel.getAnio());
                     return carruselDTO;
                 })
-                .collect(Collectors.toList()); // Devuelve la lista de CarruselDTO
+                .collect(Collectors.toList());
     }
 }

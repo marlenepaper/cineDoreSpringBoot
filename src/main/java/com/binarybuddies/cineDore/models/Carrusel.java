@@ -28,10 +28,10 @@ public class Carrusel {
     private String imagenPoster;
 
     @Column(name = "mes", nullable = false)
-    private String mes; // El mes en el que debe aparecer el carrusel, por ejemplo, "APRIL"
+    private String mes; // Formato del mes en ingles "APRIL"
 
     @Column(name = "anio", nullable = false)
-    private int anio; // El año en el que debe aparecer el carrusel, por ejemplo 2025.
+    private int anio; // Formato del año 2025.
 
     @CreationTimestamp
     private LocalDateTime createdAt;
