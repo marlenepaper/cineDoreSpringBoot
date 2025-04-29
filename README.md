@@ -45,7 +45,7 @@ La API está documentada con Swagger. Puedes consultar y probar los endpoints de
 
 🔗 Documentación JSON: http://localhost:8080/api/v3/api-docs
 
-✨ Ejemplos de endpoints
+### ✨ Ejemplos de endpoints
 
 
 🔐 POST /api/usuarios/login
