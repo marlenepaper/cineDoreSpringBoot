@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface SalaRepository extends JpaRepository<Sala, Long> {
 
     Optional<Sala> getReferenceById(long id);
+
+    Optional<Sala> getSalaByNombre(String nombre);
 }
