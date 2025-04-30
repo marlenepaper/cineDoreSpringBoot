@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface LenguajeRepository extends JpaRepository<Lenguaje, Long> {
 
     Optional<Lenguaje> getReferenceById(long id);
+    Optional<Lenguaje> getLenguajesByNombre(String nombre);
 }

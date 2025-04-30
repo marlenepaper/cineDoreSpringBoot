@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ColorRepository extends JpaRepository<Color, Long> {
 
     Optional<Color> getReferenceById(long id);
+    Optional<Color> getColorByColor(String color);
 }

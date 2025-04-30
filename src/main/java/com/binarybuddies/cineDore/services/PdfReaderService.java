@@ -1,9 +1,7 @@
 package com.binarybuddies.cineDore.services;
 
-import com.binarybuddies.cineDore.models.Funcion;
-import com.binarybuddies.cineDore.models.Pelicula;
-import com.binarybuddies.cineDore.models.Sala;
-import com.binarybuddies.cineDore.repositories.SalaRepository;
+import com.binarybuddies.cineDore.models.*;
+import com.binarybuddies.cineDore.repositories.*;
 import jakarta.transaction.Transactional;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -19,7 +17,6 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,10 +27,22 @@ public class PdfReaderService {
 
     private final SalaRepository salaRepository;
 
+    private final PeliculaRepository peliculaRepository;
+
+    private final FormatoRepository formatoRepository;
+
+    private final LenguajeRepository lenguajeRepository;
+
+    private final ColorRepository colorRepository;
+
     // Inyección por constructor
     @Autowired
-    public PdfReaderService(SalaRepository salaRepository) {
+    public PdfReaderService(SalaRepository salaRepository, PeliculaRepository peliculaRepository, FormatoRepository formatoRepository, LenguajeRepository lenguajeRepository, ColorRepository colorRepository) {
         this.salaRepository = salaRepository;
+        this.peliculaRepository = peliculaRepository;
+        this.formatoRepository = formatoRepository;
+        this.lenguajeRepository = lenguajeRepository;
+        this.colorRepository = colorRepository;
     }
 
     @Scheduled(cron = "0 0 0 1 * *")
@@ -83,90 +92,94 @@ public class PdfReaderService {
      * @param texto Solicitud del texto del pdf parseado
      */
     @Transactional
-    public void fechaFuncion(String texto){
-        //Se crea una instancia fecha
+    public void fechaFuncion(String texto) {
         Calendar fecha = Calendar.getInstance();
 
-        //Patrones para detectar, dias, meses, años y horas
         Pattern mesPattern = Pattern.compile("(ENERO|FEBRERO|MARZO|ABRIL|MAYO|JUNIO|JULIO|AGOSTO|SEPTIEMBRE|OCTUBRE|NOVIEMBRE|DICIEMBRE)");
-        Pattern horaPattern = Pattern.compile("(\\d{2}:\\d{2})");
         Pattern anioPattern = Pattern.compile("\\d{4}");
-
-        //Divide el dia en bloques para sacar las diferentes horas de las funciones
+        Pattern horaPattern = Pattern.compile("(\\d{2}:\\d{2})");
         Pattern bloqueDiaPattern = Pattern.compile(
                 "(SÁBADO|DOMINGO|LUNES|MARTES|MIÉRCOLES|JUEVES|VIERNES)\\s+(\\d+).*?(?=(SÁBADO|DOMINGO|LUNES|MARTES|MIÉRCOLES|JUEVES|VIERNES)|$)",
-                Pattern.DOTALL | Pattern.CASE_INSENSITIVE
+                Pattern.DOTALL
         );
 
-
-        //Si encuentra un año en el pdf, devuelve el primero
+        // Establecer año
         Matcher anioMatcher = anioPattern.matcher(texto);
         if (anioMatcher.find()) {
-            System.out.println("Año" + anioMatcher.group(0));
-            fecha.set(Calendar.YEAR, Integer.parseInt(anioMatcher.group(0)));
+            fecha.set(Calendar.YEAR, Integer.parseInt(anioMatcher.group()));
         }
 
-        //Si encuentra un mes en el pdf, devuelve el primero. Lo convierte a num para sacar del dato de fecha
+        // Establecer mes
         Matcher mesMatcher = mesPattern.matcher(texto);
         if (mesMatcher.find()) {
-            System.out.println("Mes número: " + obtenerNumeroMes(mesMatcher.group(0)));
             int mes = obtenerNumeroMes(mesMatcher.group(1));
             fecha.set(Calendar.MONTH, mes - 1);
         }
 
         Matcher bloqueDiaMatcher = bloqueDiaPattern.matcher(texto);
 
-        //Comprueba el día de la semana
         while (bloqueDiaMatcher.find()) {
             String diaSemana = bloqueDiaMatcher.group(1);
             int diaNumero = Integer.parseInt(bloqueDiaMatcher.group(2));
             String bloque = bloqueDiaMatcher.group(0);
-
-            System.out.println("▶ Día detectado: " + diaSemana + " " + diaNumero);
             fecha.set(Calendar.DAY_OF_MONTH, diaNumero);
+            String[] lineas = bloque.split("\\R");
 
-            Matcher horaMatcher = horaPattern.matcher(bloque);
-            while (horaMatcher.find()) {
-                String horaStr = horaMatcher.group(1);
-                String[] partesHora = horaStr.split(":");
-                int h = Integer.parseInt(partesHora[0]);
-                int m = Integer.parseInt(partesHora[1]);
-                fecha.set(Calendar.HOUR_OF_DAY, h);
-                fecha.set(Calendar.MINUTE, m);
+            Pattern autorPattern = Pattern.compile("([A-ZÁÉÍÓÚÑ.\\s]+),\\s*(\\d{4})"); // Autor y Año
 
-                Date fechaFinal = fecha.getTime();
+            // Recorremos las líneas del bloque
+            for (int i = 1; i < lineas.length; i++) {
+                String linea = lineas[i].trim();
+                Matcher autorMatcher = autorPattern.matcher(linea);
 
-                // Formatear la fecha en formato yyyy-MM-dd
-                ZoneId zona = ZoneId.systemDefault(); // o ZoneId.of("Europe/Madrid") si quieres especificar
-                LocalDateTime fechaHora = fechaFinal.toInstant().atZone(zona).toLocalDateTime();
-                System.out.println(fechaHora);
+                if (autorMatcher.find()) {
+                    String titulo = lineas[i - 1].trim();
+                    int anio = Integer.parseInt(autorMatcher.group(2));
 
-                //Crear un DTO de la función y asociar la fecha
-                Funcion funcion = new Funcion();
-                funcion.setFechaHora(fechaHora);
+                    Pelicula pelicula = new Pelicula();
+                    pelicula.setNombre(titulo);
+                    pelicula.setAnio(anio);
 
-
-                Pattern salaPattern = Pattern.compile("SALA\\s+(\\d+)");
-                Matcher salaMatcher = salaPattern.matcher(bloque);
-                while (salaMatcher.find()) {
-
-                    try{
-                        Optional<Sala> sala = this.salaRepository.getSalaByNombre("Sala " + salaMatcher.group(1));
-                        sala.ifPresent(funcion::setSala);
-                        System.out.println("sala existente");
-                    }catch (Exception e){
-                        System.out.println("Sala no encontrada");
+                    // Buscar en línea anterior, actual y siguiente
+                    StringBuilder contexto = new StringBuilder();
+                    for (int j = Math.max(i - 1, 0); j <= Math.min(i + 2, lineas.length - 1); j++) {
+                        contexto.append(lineas[j]).append(" ");
                     }
+                    String datosPeliculas = contexto.toString();
 
+                    Matcher duracionMatcher = Pattern.compile("(\\d+)[’']").matcher(datosPeliculas);
+                    Matcher formatoMatcher = Pattern.compile("\\b(35 MM|16 MM|BDG|BSP|B-R|DCP|REST)\\b").matcher(datosPeliculas);
+                    Matcher idiomaMatcher = Pattern.compile("\\b(VE|VOSE|VOSS|VOSI|VOSFR|MRE|MRI/E\\*|VOSE\\*)\\b").matcher(datosPeliculas);
+                    Matcher colorMatcher = Pattern.compile("\\b(B/N|Color)\\b", Pattern.CASE_INSENSITIVE).matcher(datosPeliculas);
+                    Matcher horaMatcher = horaPattern.matcher(datosPeliculas);
+                    Matcher salaMatcher = Pattern.compile("SALA\\s+(\\d+)").matcher(datosPeliculas);
+
+                    if (duracionMatcher.find()) pelicula.setDuracion(Integer.parseInt(duracionMatcher.group(1)));
+                    if (formatoMatcher.find()) formatoRepository.getFormatoByNombre(formatoMatcher.group(1)).ifPresent(pelicula::setFormato);
+                    if (idiomaMatcher.find()) lenguajeRepository.getLenguajesByNombre(idiomaMatcher.group(1)).ifPresent(pelicula::setLenguaje);
+                    if (colorMatcher.find()) colorRepository.getColorByColor(colorMatcher.group(1)).ifPresent(pelicula::setColor);
+
+                    if (horaMatcher.find() && salaMatcher.find()) {
+                        String[] partesHora = horaMatcher.group(1).split(":");
+                        fecha.set(Calendar.HOUR_OF_DAY, Integer.parseInt(partesHora[0]));
+                        fecha.set(Calendar.MINUTE, Integer.parseInt(partesHora[1]));
+                        LocalDateTime fechaHora = fecha.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+                        System.out.println("🎬 Película: " + pelicula.getNombre());
+                        System.out.println("📅 Año: " + pelicula.getAnio());
+                        System.out.println("⏱️ Duración: " + pelicula.getDuracion());
+                        System.out.println("📽️ Formato: " + (pelicula.getFormato() != null ? pelicula.getFormato().getNombre() : "N/A"));
+                        System.out.println("🗣️ Idioma: " + (pelicula.getLenguaje() != null ? pelicula.getLenguaje().getNombre() : "N/A"));
+                        System.out.println("🎨 Color: " + (pelicula.getColor() != null ? pelicula.getColor().getColor() : "N/A"));
+                        System.out.println("🕒 Función: " + fechaHora);
+                        System.out.println("🏛️ Sala: Sala " + salaMatcher.group(1));
+                        System.out.println("──────────────────────────────");
+                    }
                 }
-
-                Pelicula pelicula = new Pelicula();
-
-
-
             }
         }
     }
+
 
     public static int obtenerNumeroMes(String mes) {
         return switch (mes.toUpperCase()) {
@@ -185,6 +198,5 @@ public class PdfReaderService {
             default -> -1;  // Mes no válido
         };
     }
-
 
 }

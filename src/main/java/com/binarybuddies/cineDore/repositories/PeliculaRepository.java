@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface PeliculaRepository extends JpaRepository<Pelicula, Long> {
 
     Optional<Pelicula> getReferenceById(long id);
+    Optional<Pelicula> getPeliculasByNombre(String nombre);
 }

@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface FormatoRepository extends JpaRepository<Formato, Long> {
 
     Optional<Formato> getReferenceById(long id);
+    Optional<Formato> getFormatoByNombre(String nombre);
 }
