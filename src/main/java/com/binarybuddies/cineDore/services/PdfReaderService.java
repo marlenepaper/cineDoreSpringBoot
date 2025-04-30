@@ -24,7 +24,19 @@ import java.util.regex.Pattern;
 @Service
 public class PdfReaderService {
 
-
+    private static final Pattern PATRON_AUTOR_ANIO = Pattern.compile("([A-ZÁÉÍÓÚÑ.\\s]+),\\s*(\\d{4})");
+    private static final Pattern PATRON_MES = Pattern.compile("(ENERO|FEBRERO|MARZO|ABRIL|MAYO|JUNIO|JULIO|AGOSTO|SEPTIEMBRE|OCTUBRE|NOVIEMBRE|DICIEMBRE)");
+    private static final Pattern PATRON_ANIO = Pattern.compile("\\d{4}");
+    private static final Pattern PATRON_HORA = Pattern.compile("(\\d{2}:\\d{2})");
+    private static final Pattern PATRON_BLOQUE_DIA = Pattern.compile(
+            "(SÁBADO|DOMINGO|LUNES|MARTES|MIÉRCOLES|JUEVES|VIERNES)\\s+(\\d+).*?(?=(SÁBADO|DOMINGO|LUNES|MARTES|MIÉRCOLES|JUEVES|VIERNES)|$)",
+            Pattern.DOTALL
+    );
+    private static final Pattern PATRON_DURACION = Pattern.compile("(\\d+)[’']");
+    private static final Pattern PATRON_FORMATO = Pattern.compile("\\b(35 MM|16 MM|BDG|BSP|B-R|DCP|REST)\\b");
+    private static final Pattern PATRON_IDIOMA = Pattern.compile("\\b(VE|VOSE|VOSS|VOSI|VOSFR|MRE|MRI/E\\*|VOSE\\*)\\b");
+    private static final Pattern PATRON_COLOR = Pattern.compile("\\b(B/N|Color)\\b", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PATRON_SALA = Pattern.compile("SALA\\s+(\\d+)");
     private final SalaRepository salaRepository;
 
     private final PeliculaRepository peliculaRepository;
@@ -95,86 +107,88 @@ public class PdfReaderService {
     public void fechaFuncion(String texto) {
         Calendar fecha = Calendar.getInstance();
 
-        Pattern mesPattern = Pattern.compile("(ENERO|FEBRERO|MARZO|ABRIL|MAYO|JUNIO|JULIO|AGOSTO|SEPTIEMBRE|OCTUBRE|NOVIEMBRE|DICIEMBRE)");
-        Pattern anioPattern = Pattern.compile("\\d{4}");
-        Pattern horaPattern = Pattern.compile("(\\d{2}:\\d{2})");
-        Pattern bloqueDiaPattern = Pattern.compile(
-                "(SÁBADO|DOMINGO|LUNES|MARTES|MIÉRCOLES|JUEVES|VIERNES)\\s+(\\d+).*?(?=(SÁBADO|DOMINGO|LUNES|MARTES|MIÉRCOLES|JUEVES|VIERNES)|$)",
-                Pattern.DOTALL
-        );
 
         // Establecer año
-        Matcher anioMatcher = anioPattern.matcher(texto);
+        Matcher anioMatcher = PATRON_ANIO.matcher(texto);
         if (anioMatcher.find()) {
             fecha.set(Calendar.YEAR, Integer.parseInt(anioMatcher.group()));
         }
 
         // Establecer mes
-        Matcher mesMatcher = mesPattern.matcher(texto);
+        Matcher mesMatcher = PATRON_MES.matcher(texto);
         if (mesMatcher.find()) {
             int mes = obtenerNumeroMes(mesMatcher.group(1));
             fecha.set(Calendar.MONTH, mes - 1);
         }
 
-        Matcher bloqueDiaMatcher = bloqueDiaPattern.matcher(texto);
+        Matcher bloqueDiaMatcher = PATRON_BLOQUE_DIA.matcher(texto);
 
         while (bloqueDiaMatcher.find()) {
-            String diaSemana = bloqueDiaMatcher.group(1);
             int diaNumero = Integer.parseInt(bloqueDiaMatcher.group(2));
             String bloque = bloqueDiaMatcher.group(0);
             fecha.set(Calendar.DAY_OF_MONTH, diaNumero);
             String[] lineas = bloque.split("\\R");
 
-            Pattern autorPattern = Pattern.compile("([A-ZÁÉÍÓÚÑ.\\s]+),\\s*(\\d{4})"); // Autor y Año
 
             // Recorremos las líneas del bloque
             for (int i = 1; i < lineas.length; i++) {
                 String linea = lineas[i].trim();
-                Matcher autorMatcher = autorPattern.matcher(linea);
+                Matcher autorMatcher = PATRON_AUTOR_ANIO.matcher(linea);
 
                 if (autorMatcher.find()) {
                     String titulo = lineas[i - 1].trim();
                     int anio = Integer.parseInt(autorMatcher.group(2));
 
+                    Funcion funcion = new Funcion();
                     Pelicula pelicula = new Pelicula();
                     pelicula.setNombre(titulo);
-                    pelicula.setAnio(anio);
+                    Optional<Pelicula> peliculaOpt = this.peliculaRepository.getPeliculasByNombre(titulo);
+                    if (peliculaOpt.isPresent()) {
+                        funcion.setPelicula(peliculaOpt.get());
+                        System.out.println("Ya existe la pelicula");
+                    }else {
+                        pelicula.setAnio(anio);
+                        funcion.setPelicula(pelicula);
+                        StringBuilder contexto = new StringBuilder();
+                        for (int j = Math.max(i - 1, 0); j <= Math.min(i + 2, lineas.length - 1); j++) {
+                            contexto.append(lineas[j]).append(" ");
+                        }
+                        String datosPeliculas = contexto.toString();
 
-                    // Buscar en línea anterior, actual y siguiente
-                    StringBuilder contexto = new StringBuilder();
-                    for (int j = Math.max(i - 1, 0); j <= Math.min(i + 2, lineas.length - 1); j++) {
-                        contexto.append(lineas[j]).append(" ");
+                        Matcher duracionMatcher = PATRON_DURACION.matcher(datosPeliculas);
+                        Matcher formatoMatcher = PATRON_FORMATO.matcher(datosPeliculas);
+                        Matcher idiomaMatcher = PATRON_IDIOMA.matcher(datosPeliculas);
+                        Matcher colorMatcher = PATRON_COLOR.matcher(datosPeliculas);
+                        Matcher horaMatcher = PATRON_HORA.matcher(datosPeliculas);
+                        Matcher salaMatcher = PATRON_SALA.matcher(datosPeliculas);
+
+                        if (salaMatcher.find()) {
+                            Optional<Sala> sala = salaRepository.getSalaByNombre("Sala " + salaMatcher.group(1));
+                            sala.ifPresent(funcion::setSala);
+                        }
+                        if (duracionMatcher.find()) pelicula.setDuracion(Integer.parseInt(duracionMatcher.group(1)));
+                        if (formatoMatcher.find()) formatoRepository.getFormatoByNombre(formatoMatcher.group(1)).ifPresent(pelicula::setFormato);
+                        if (idiomaMatcher.find()) lenguajeRepository.getLenguajesByNombre(idiomaMatcher.group(1)).ifPresent(pelicula::setLenguaje);
+                        if (colorMatcher.find()) colorRepository.getColorByColor(colorMatcher.group(1)).ifPresent(pelicula::setColor);
+
+                        if (horaMatcher.find()) {
+                            String[] partesHora = horaMatcher.group(1).split(":");
+                            fecha.set(Calendar.HOUR_OF_DAY, Integer.parseInt(partesHora[0]));
+                            fecha.set(Calendar.MINUTE, Integer.parseInt(partesHora[1]));
+                            LocalDateTime fechaHora = fecha.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                            funcion.setFechaHora(fechaHora);
+                            System.out.println("🎬 Película: " + pelicula.getNombre());
+                            System.out.println("📅 Año: " + pelicula.getAnio());
+                            System.out.println("⏱️ Duración: " + pelicula.getDuracion());
+                            System.out.println("📽️ Formato: " + (pelicula.getFormato() != null ? pelicula.getFormato().getNombre() : "N/A"));
+                            System.out.println("🗣️ Idioma: " + (pelicula.getLenguaje() != null ? pelicula.getLenguaje().getNombre() : "N/A"));
+                            System.out.println("🎨 Color: " + (pelicula.getColor() != null ? pelicula.getColor().getColor() : "N/A"));
+                            System.out.println("🕒 Función: " + funcion.getFechaHora());
+                            System.out.println("🏛️ Sala: Sala " + salaMatcher.group(1));
+                            System.out.println("──────────────────────────────");
+                        }
                     }
-                    String datosPeliculas = contexto.toString();
 
-                    Matcher duracionMatcher = Pattern.compile("(\\d+)[’']").matcher(datosPeliculas);
-                    Matcher formatoMatcher = Pattern.compile("\\b(35 MM|16 MM|BDG|BSP|B-R|DCP|REST)\\b").matcher(datosPeliculas);
-                    Matcher idiomaMatcher = Pattern.compile("\\b(VE|VOSE|VOSS|VOSI|VOSFR|MRE|MRI/E\\*|VOSE\\*)\\b").matcher(datosPeliculas);
-                    Matcher colorMatcher = Pattern.compile("\\b(B/N|Color)\\b", Pattern.CASE_INSENSITIVE).matcher(datosPeliculas);
-                    Matcher horaMatcher = horaPattern.matcher(datosPeliculas);
-                    Matcher salaMatcher = Pattern.compile("SALA\\s+(\\d+)").matcher(datosPeliculas);
-
-                    if (duracionMatcher.find()) pelicula.setDuracion(Integer.parseInt(duracionMatcher.group(1)));
-                    if (formatoMatcher.find()) formatoRepository.getFormatoByNombre(formatoMatcher.group(1)).ifPresent(pelicula::setFormato);
-                    if (idiomaMatcher.find()) lenguajeRepository.getLenguajesByNombre(idiomaMatcher.group(1)).ifPresent(pelicula::setLenguaje);
-                    if (colorMatcher.find()) colorRepository.getColorByColor(colorMatcher.group(1)).ifPresent(pelicula::setColor);
-
-                    if (horaMatcher.find() && salaMatcher.find()) {
-                        String[] partesHora = horaMatcher.group(1).split(":");
-                        fecha.set(Calendar.HOUR_OF_DAY, Integer.parseInt(partesHora[0]));
-                        fecha.set(Calendar.MINUTE, Integer.parseInt(partesHora[1]));
-                        LocalDateTime fechaHora = fecha.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-
-                        System.out.println("🎬 Película: " + pelicula.getNombre());
-                        System.out.println("📅 Año: " + pelicula.getAnio());
-                        System.out.println("⏱️ Duración: " + pelicula.getDuracion());
-                        System.out.println("📽️ Formato: " + (pelicula.getFormato() != null ? pelicula.getFormato().getNombre() : "N/A"));
-                        System.out.println("🗣️ Idioma: " + (pelicula.getLenguaje() != null ? pelicula.getLenguaje().getNombre() : "N/A"));
-                        System.out.println("🎨 Color: " + (pelicula.getColor() != null ? pelicula.getColor().getColor() : "N/A"));
-                        System.out.println("🕒 Función: " + fechaHora);
-                        System.out.println("🏛️ Sala: Sala " + salaMatcher.group(1));
-                        System.out.println("──────────────────────────────");
-                    }
                 }
             }
         }
