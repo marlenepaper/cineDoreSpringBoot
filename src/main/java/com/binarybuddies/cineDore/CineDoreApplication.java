@@ -24,7 +24,7 @@ public class CineDoreApplication {
 	@PostConstruct
 	public void run() {
 		try {
-			String texto = reader.procesarPdf("C:\\Users\\Sihao\\Desktop\\EPSUM\\TFG\\recursos\\programacion\\programa-mayo2025-filmotecaespa-ola.pdf");
+			String texto = reader.procesarPdfpeliculas("C:\\Users\\Sihao\\Desktop\\EPSUM\\TFG\\recursos\\programacion\\programa-mayo2025-filmotecaespa-ola.pdf");
 			reader.fechaFuncion(texto);
 		} catch (IOException e) {
 			e.printStackTrace();

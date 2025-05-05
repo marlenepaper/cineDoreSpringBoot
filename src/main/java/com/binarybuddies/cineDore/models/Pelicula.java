@@ -31,19 +31,19 @@ public class Pelicula
     @Column(nullable = false)
     private int duracion; // in minutes
 
-    @Column(nullable = false)
+    @Column()
     private String sinopsis;
 
-    @Column(nullable = false)
+    @Column()
     private String imagenPoster;
 
     @ManyToOne
-    @JoinColumn(name = "idCategoria", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "idCategoria", referencedColumnName = "id", nullable = true)
     @JsonManagedReference
     private Categoria categoria;
 
     @ManyToOne
-    @JoinColumn(name = "idClasificacion", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "idClasificacion", referencedColumnName = "id", nullable = true)
     @JsonManagedReference
     private Clasificacion clasificacion;
 
@@ -53,7 +53,7 @@ public class Pelicula
     private Formato formato;
 
     @ManyToOne
-    @JoinColumn(name = "idLenguaje", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "idLenguaje", referencedColumnName = "id", nullable = true)
     @JsonManagedReference
     private Lenguaje lenguaje;
 

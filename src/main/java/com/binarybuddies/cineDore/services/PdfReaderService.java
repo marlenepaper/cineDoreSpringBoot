@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 @Service
 public class PdfReaderService {
 
+    //Patrones estáticos
     private static final Pattern PATRON_AUTOR_ANIO = Pattern.compile("([A-ZÁÉÍÓÚÑ.\\s]+),\\s*(\\d{4})");
     private static final Pattern PATRON_MES = Pattern.compile("(ENERO|FEBRERO|MARZO|ABRIL|MAYO|JUNIO|JULIO|AGOSTO|SEPTIEMBRE|OCTUBRE|NOVIEMBRE|DICIEMBRE)");
     private static final Pattern PATRON_ANIO = Pattern.compile("\\d{4}");
@@ -47,14 +48,17 @@ public class PdfReaderService {
 
     private final ColorRepository colorRepository;
 
+    private final FuncionRepository funcionRepository;
+
     // Inyección por constructor
     @Autowired
-    public PdfReaderService(SalaRepository salaRepository, PeliculaRepository peliculaRepository, FormatoRepository formatoRepository, LenguajeRepository lenguajeRepository, ColorRepository colorRepository) {
+    public PdfReaderService(SalaRepository salaRepository, PeliculaRepository peliculaRepository, FormatoRepository formatoRepository, LenguajeRepository lenguajeRepository, ColorRepository colorRepository, FuncionRepository funcionRepository) {
         this.salaRepository = salaRepository;
         this.peliculaRepository = peliculaRepository;
         this.formatoRepository = formatoRepository;
         this.lenguajeRepository = lenguajeRepository;
         this.colorRepository = colorRepository;
+        this.funcionRepository = funcionRepository;
     }
 
     @Scheduled(cron = "0 0 0 1 * *")
@@ -83,10 +87,15 @@ public class PdfReaderService {
     }
 
 
-    public String procesarPdf(String filePath) throws IOException {
+    public String procesarPdfpeliculas(String filePath) throws IOException {
 
          try (PDDocument document = Loader.loadPDF(new File(filePath))) {
              PDFTextStripper stripper = new PDFTextStripper();
+
+             // Establecer el rango de páginas (1 es la primera página, 6 es la última página que queremos leer)
+             stripper.setStartPage(1);  // Primera página
+             stripper.setEndPage(6);    // Última página a leer
+
              String texto = stripper.getText(document);
              System.out.println(texto);
              return texto;
@@ -106,7 +115,6 @@ public class PdfReaderService {
     @Transactional
     public void fechaFuncion(String texto) {
         Calendar fecha = Calendar.getInstance();
-
 
         // Establecer año
         Matcher anioMatcher = PATRON_ANIO.matcher(texto);
@@ -135,58 +143,99 @@ public class PdfReaderService {
                 String linea = lineas[i].trim();
                 Matcher autorMatcher = PATRON_AUTOR_ANIO.matcher(linea);
 
+                //Buscar autor y fecha
                 if (autorMatcher.find()) {
                     String titulo = lineas[i - 1].trim();
                     int anio = Integer.parseInt(autorMatcher.group(2));
 
+                    //Crear nueva funcion
                     Funcion funcion = new Funcion();
-                    Pelicula pelicula = new Pelicula();
-                    pelicula.setNombre(titulo);
+
+                    StringBuilder contexto = new StringBuilder();
+                    int min = Math.min(i + 2, lineas.length - 1);
+                    for (int j = Math.max(i - 2, 0); j <= min; j++) {
+                        contexto.append(lineas[j]).append(" ");
+                    }
+                    String datosContexto = contexto.toString();
+
+                    Matcher horaMatcher = PATRON_HORA.matcher(datosContexto);
+                    if (horaMatcher.find()) {
+                        String[] partesHora = horaMatcher.group(1).split(":");
+                        fecha.set(Calendar.HOUR_OF_DAY, Integer.parseInt(partesHora[0]));
+                        fecha.set(Calendar.MINUTE, Integer.parseInt(partesHora[1]));
+                        LocalDateTime fechaHora = fecha.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                        //Asignar fecha y hora  ala función
+                        funcion.setFechaHora(fechaHora);
+                    }
+
+                    Matcher salaMatcher = PATRON_SALA.matcher(datosContexto);
+
+                    //Buscar si la sala existe y asginarla a la función
+                    if (salaMatcher.find()) {
+                        Optional<Sala> sala = salaRepository.getSalaByNombre("Sala " + salaMatcher.group(1));
+                        sala.ifPresent(funcion::setSala);
+                    }
+                    //Comprobar si existe la pelicula
                     Optional<Pelicula> peliculaOpt = this.peliculaRepository.getPeliculasByNombre(titulo);
+
+                    //Crear pelicula si no existe
+                    Pelicula pelicula;
+                    //En caso de que exista, asignarselo a la funcion
                     if (peliculaOpt.isPresent()) {
-                        funcion.setPelicula(peliculaOpt.get());
-                        System.out.println("Ya existe la pelicula");
-                    }else {
+                        pelicula = peliculaOpt.get();
+                        System.out.println("Ya existe la película: " + titulo);
+                    }else { //Asignarle los datos si no existe
+                        pelicula = new Pelicula();
+                        pelicula.setNombre(titulo);
                         pelicula.setAnio(anio);
-                        funcion.setPelicula(pelicula);
-                        StringBuilder contexto = new StringBuilder();
-                        for (int j = Math.max(i - 1, 0); j <= Math.min(i + 2, lineas.length - 1); j++) {
+
+                        //Partimos de la linea de autor con año, y se busca hacia arriba o abajo
+                        for (int j = Math.max(i - 1, 0); j <= min; j++) {
                             contexto.append(lineas[j]).append(" ");
                         }
                         String datosPeliculas = contexto.toString();
-
+                        //Detectar patrones
                         Matcher duracionMatcher = PATRON_DURACION.matcher(datosPeliculas);
                         Matcher formatoMatcher = PATRON_FORMATO.matcher(datosPeliculas);
                         Matcher idiomaMatcher = PATRON_IDIOMA.matcher(datosPeliculas);
                         Matcher colorMatcher = PATRON_COLOR.matcher(datosPeliculas);
-                        Matcher horaMatcher = PATRON_HORA.matcher(datosPeliculas);
-                        Matcher salaMatcher = PATRON_SALA.matcher(datosPeliculas);
 
-                        if (salaMatcher.find()) {
-                            Optional<Sala> sala = salaRepository.getSalaByNombre("Sala " + salaMatcher.group(1));
-                            sala.ifPresent(funcion::setSala);
-                        }
+
+
+                        //Asignar los atributos a la película
                         if (duracionMatcher.find()) pelicula.setDuracion(Integer.parseInt(duracionMatcher.group(1)));
                         if (formatoMatcher.find()) formatoRepository.getFormatoByNombre(formatoMatcher.group(1)).ifPresent(pelicula::setFormato);
                         if (idiomaMatcher.find()) lenguajeRepository.getLenguajesByNombre(idiomaMatcher.group(1)).ifPresent(pelicula::setLenguaje);
                         if (colorMatcher.find()) colorRepository.getColorByColor(colorMatcher.group(1)).ifPresent(pelicula::setColor);
 
-                        if (horaMatcher.find()) {
-                            String[] partesHora = horaMatcher.group(1).split(":");
-                            fecha.set(Calendar.HOUR_OF_DAY, Integer.parseInt(partesHora[0]));
-                            fecha.set(Calendar.MINUTE, Integer.parseInt(partesHora[1]));
-                            LocalDateTime fechaHora = fecha.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-                            funcion.setFechaHora(fechaHora);
-                            System.out.println("🎬 Película: " + pelicula.getNombre());
-                            System.out.println("📅 Año: " + pelicula.getAnio());
-                            System.out.println("⏱️ Duración: " + pelicula.getDuracion());
-                            System.out.println("📽️ Formato: " + (pelicula.getFormato() != null ? pelicula.getFormato().getNombre() : "N/A"));
-                            System.out.println("🗣️ Idioma: " + (pelicula.getLenguaje() != null ? pelicula.getLenguaje().getNombre() : "N/A"));
-                            System.out.println("🎨 Color: " + (pelicula.getColor() != null ? pelicula.getColor().getColor() : "N/A"));
-                            System.out.println("🕒 Función: " + funcion.getFechaHora());
-                            System.out.println("🏛️ Sala: Sala " + salaMatcher.group(1));
-                            System.out.println("──────────────────────────────");
+                        //Guardar la película en la base de datos
+                        peliculaRepository.save(pelicula);
+
+                        //Completar la hora de la función
+
+                        //Esto se puede borrar, solo es para confirmar por consola los datos
+                        System.out.println("🎬 Película: " + pelicula.getNombre());
+                        System.out.println("📅 Año: " + pelicula.getAnio());
+                        System.out.println("⏱️ Duración: " + pelicula.getDuracion());
+                        System.out.println("📽️ Formato: " + (pelicula.getFormato() != null ? pelicula.getFormato().getNombre() : "N/A"));
+                        System.out.println("🗣️ Idioma: " + (pelicula.getLenguaje() != null ? pelicula.getLenguaje().getNombre() : "N/A"));
+                        System.out.println("🎨 Color: " + (pelicula.getColor() != null ? pelicula.getColor().getColor() : "N/A"));
+                        System.out.println("🕒 Función: " + funcion.getFechaHora());
+                        System.out.println("🏛️ Sala: " + (funcion.getSala() != null ? funcion.getSala().getNombre() : "N/A"));
+                        System.out.println("──────────────────────────────");
+
+                    }
+                    // Asignar película a la función, nueva o existente
+                    funcion.setPelicula(pelicula);
+                    // Comprobar que la sala y fechaHora están asignadas antes de comprobar si existe
+                    if (funcion.getFechaHora() != null && funcion.getSala() != null) {
+                        if (funcionRepository.existsFuncionByFechaHoraAndSala(funcion.getFechaHora(), funcion.getSala())) {
+                            System.out.println("Ya existe la función");
+                        } else {
+                            funcionRepository.save(funcion);
                         }
+                    } else {
+                        System.out.println("No se puede guardar la función: fechaHora o sala son nulos");
                     }
 
                 }
