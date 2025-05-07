@@ -3,6 +3,7 @@ package com.binarybuddies.cineDore.utils;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.qrcode.QRCodeWriter;
+import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -12,6 +13,7 @@ import java.util.Base64;
  * Genera el código qr para el ticket
  */
 
+@Component
 public class QRGenerator {
     public static String generateQrBase64(String text) throws Exception {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
