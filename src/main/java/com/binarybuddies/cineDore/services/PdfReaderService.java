@@ -86,6 +86,7 @@ public class PdfReaderService {
      * Comprueba las fechas, crea una función por fecha y hora.
      * Crea películas, comprueba repetidas.
      * Asocia función con cada película.
+     * Se ejecuta mientras siga encontrando patrones de día (SÁBADO 3, DOMINGO 4)
      *
      * @param texto Solicitud del texto del pdf parseado
      */

@@ -38,11 +38,12 @@ public class PdfDownloader {
                 String href = link.attr("href").toLowerCase();
                 String text = link.text().toLowerCase();
 
-                if (href.endsWith("pdf") || text.contains("programa")){
+                if (href.endsWith("pdf") && text.contains("programa")){
                     String pdfUrl = link.absUrl("href");
                     String fileName = pdfUrl.substring(pdfUrl.lastIndexOf("/")+1);
                     Path destinoFinal = destino.resolve(fileName);
-
+                    System.out.println(pdfUrl);
+                    System.out.println(fileName);
                     try(InputStream in = new URI(pdfUrl).toURL().openStream()){
                         Files.copy(in, destinoFinal, StandardCopyOption.REPLACE_EXISTING);
                     } catch (URISyntaxException e) {

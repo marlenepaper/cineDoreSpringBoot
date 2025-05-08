@@ -28,7 +28,7 @@ public class LinkService {
         this.linkRepository = linkRepository;
     }
 
-    @Scheduled(cron = "0 0 0 1 * *")
+    @Scheduled(cron = "0 0 10 20-31 * *") // Todos los días del 20 al 31 a las 10:00 AM
     public void downloadAndReadPdf() throws IOException {
         //Directorio temporal donde se va a guardar el pdf
         Path destino = Paths.get("temp");
@@ -40,15 +40,27 @@ public class LinkService {
 
 
         if (archivo.isPresent()) {
+
+            //Busca el link en la base de datos, si existe, se termina
+            Optional<Links> linkOpt = linkRepository.findLinksByUrl(archivo.get().getFileName().toString());
+            if (linkOpt.isPresent()) {
+                try {
+                    Files.delete(archivo.get());
+                } catch (IOException e) {
+                    System.out.println("Error al eliminar el archivo");
+                }
+                return;
+            }
+
             //Parsea el pdf a string
             String texto = pdfReaderService.procesarPdfpeliculas(archivo.get().toString());
             //Guarda las funciones y las películas del texto
             pdfReaderService.extraerDatosPeliculasFunciones(texto);
 
-            //Crea una entidad link
+            //Crea una entidad link si no existe
             Links link = new Links();
             //Guarda la url del pdf
-            link.setUrl(archivo.get().toString());
+            link.setUrl(archivo.get().getFileName().toString());
             //El nombre de la entidad será el mes y el año de descarga
             LocalDateTime fechaDescarga = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");

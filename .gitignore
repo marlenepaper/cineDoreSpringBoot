@@ -52,3 +52,6 @@ secrets.properties
 hs_err_pid*
 *.tmp
 *.bak
+
+
+/src/main/resources/truststore.jks
