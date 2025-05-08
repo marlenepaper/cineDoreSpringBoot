@@ -3,6 +3,7 @@ package com.binarybuddies.cineDore.services;
 import com.binarybuddies.cineDore.models.Links;
 import com.binarybuddies.cineDore.repositories.LinkRepository;
 import com.binarybuddies.cineDore.utils.PdfDownloader;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+/**
+ * Servicio que junta los servicios de pdfReader y el código de pdfDownloader
+ */
 @Service
 public class LinkService {
 
@@ -28,7 +32,12 @@ public class LinkService {
         this.linkRepository = linkRepository;
     }
 
+    /**
+     * Código para descargar, parsear y extrae datos.
+     * Tiene un scheduled para que se ejecute cuando se le indica
+     */
     @Scheduled(cron = "0 0 10 20-31 * *") // Todos los días del 20 al 31 a las 10:00 AM
+    @Async //Para ejecutar como hilo separado del principal
     public void downloadAndReadPdf() throws IOException {
         //Directorio temporal donde se va a guardar el pdf
         Path destino = Paths.get("temp");
